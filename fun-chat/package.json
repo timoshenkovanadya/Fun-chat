@@ -1,0 +1,52 @@
+{
+    "name": "fun-chat",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
+        "build": "webpack --config ./webpack.config.js --env mode=prod",
+        "deploy": "npm run build && npx gh-pages -d dist -e fun-chat",
+        "lint": "eslint . --ext .ts",
+        "tsc": "tsc",
+        "format": "prettier --write .",
+        "ci:format": "prettier --check .",
+        "prepare": "cd .. && husky install [fun-chat]/.husky"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "prettier --check .",
+            "pre-push": "npm run lint"
+        }
+    },
+    "author": "Nadya Amialchuk",
+    "license": "ISC",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^7.1.0",
+        "@typescript-eslint/parser": "^7.1.0",
+        "copy-webpack-plugin": "^12.0.2",
+        "eslint": "^8.57.0",
+        "eslint-config-airbnb-typescript": "^18.0.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-prettier": "^5.1.3",
+        "husky": "^8.0.0",
+        "mini-css-extract-plugin": "^2.8.1",
+        "sass": "^1.71.1",
+        "sass-loader": "^14.1.1",
+        "typescript-eslint": "^7.1.1",
+        "webpack": "^5.90.3"
+    },
+    "dependencies": {
+        "clean-webpack-plugin": "^4.0.0",
+        "css-loader": "^6.10.0",
+        "gh-pages": "^6.1.1",
+        "html-webpack-plugin": "^5.6.0",
+        "prettier": "^3.2.5",
+        "style-loader": "^3.3.4",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.3.3",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.2"
+    }
+}
