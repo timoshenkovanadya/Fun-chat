@@ -1,4 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponent";
+import { SessionStorage } from "../sessionStorage/sessionStorage";
 import { socket, socketSend } from "../socket/socket";
 
 export class Login extends BaseComponent {
@@ -24,8 +25,12 @@ export class Login extends BaseComponent {
 
     public errorMessage: BaseComponent;
 
+    public sessionStorage: SessionStorage;
+
     constructor(props: BaseComponentProps) {
         super(props);
+
+        this.sessionStorage = new SessionStorage();
 
         this.loginContainer = new BaseComponent({
             tagName: "div",
@@ -42,15 +47,14 @@ export class Login extends BaseComponent {
         });
 
         this.socket = socket;
-        
-        socket.onmessage =  (event) => {
+
+        socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "ERROR") {
-                this.errorMessage.setTextContent(message.payload.error)
+                this.errorMessage.setTextContent(message.payload.error);
                 setTimeout(() => {
-                    this.errorMessage.setTextContent('');
-                  }, 5000); 
-                
+                    this.errorMessage.setTextContent("");
+                }, 5000);
             }
         };
 
@@ -158,6 +162,10 @@ export class Login extends BaseComponent {
             },
         };
         socketSend("USER_LOGIN", payload);
+        this.sessionStorage.submit(
+            (this.loginInput.getElement() as HTMLInputElement).value,
+            (this.passwordInput.getElement() as HTMLInputElement).value
+        );
     };
 
     keyEnterHandler = (e: KeyboardEvent) => {
