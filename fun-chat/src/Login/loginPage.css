@@ -1,7 +1,5 @@
-body{
-    background-color: #d9c5d8;
-}
-/* .login-container{
+
+.login-container{
     font-size: 20px;
     margin-top: 200px;
     gap: 10px;
@@ -52,4 +50,4 @@ body{
     display: block;
     font-size: 12px;
     color: red;
-} */
+}

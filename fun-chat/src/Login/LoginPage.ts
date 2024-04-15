@@ -1,6 +1,8 @@
 import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponent";
+import { MainPage } from "../MainPage/MainPage";
 import { SessionStorage } from "../sessionStorage/sessionStorage";
 import { socket, socketSend } from "../socket/socket";
+import './LoginPage.css';
 
 export class Login extends BaseComponent {
     public loginContainer: BaseComponent;
@@ -27,8 +29,12 @@ export class Login extends BaseComponent {
 
     public sessionStorage: SessionStorage;
 
+   
+
     constructor(props: BaseComponentProps) {
         super(props);
+
+        
 
         this.sessionStorage = new SessionStorage();
 
