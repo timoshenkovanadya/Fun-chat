@@ -1,5 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponent";
-import { socketSend } from "../socket/socket";
+import { socket, socketSend } from "../socket/socket";
 
 export class Login extends BaseComponent {
     public loginContainer: BaseComponent;
@@ -12,33 +12,100 @@ export class Login extends BaseComponent {
 
     public infoButton: BaseComponent;
 
+    public loginValidationText: BaseComponent;
+
+    public passwordValidationText: BaseComponent;
+
+    public loginInputContainer: BaseComponent;
+
+    public passwordInputContainer: BaseComponent;
+
+    public socket: WebSocket;
+
+    public errorMessage: BaseComponent;
+
     constructor(props: BaseComponentProps) {
         super(props);
 
         this.loginContainer = new BaseComponent({
             tagName: "div",
             classNames: "login-container",
+            textContent: "Authentication",
             parentNode: this.element,
+        });
+
+        this.errorMessage = new BaseComponent({
+            tagName: "div",
+            classNames: "error-message",
+            textContent: "",
+            parentNode: this.loginContainer.getElement(),
+        });
+
+        this.socket = socket;
+        
+        socket.onmessage =  (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "ERROR") {
+                this.errorMessage.setTextContent(message.payload.error)
+                setTimeout(() => {
+                    this.errorMessage.setTextContent('');
+                  }, 5000); 
+                
+            }
+        };
+
+        this.loginInputContainer = new BaseComponent({
+            tagName: "div",
+            classNames: "input-container",
+            parentNode: this.loginContainer.getElement(),
         });
 
         this.loginInput = new BaseComponent({
             tagName: "input",
             classNames: "input",
+            parentNode: this.loginInputContainer.getElement(),
+        });
+        this.loginInput.setAttribute({ name: "placeholder", value: "Enter your login here" });
+
+        this.loginInput.getElement().addEventListener("input", this.validateInput(this.loginInput));
+        this.loginInput.getElement().addEventListener("keydown", this.keyEnterHandler);
+
+        this.loginValidationText = new BaseComponent({
+            tagName: "p",
+            classNames: "validation-message",
+            textContent: "validation-message",
+            parentNode: this.loginInputContainer.getElement(),
+        });
+
+        this.passwordInputContainer = new BaseComponent({
+            tagName: "div",
+            classNames: "input-container",
             parentNode: this.loginContainer.getElement(),
         });
 
         this.passwordInput = new BaseComponent({
             tagName: "input",
             classNames: "input",
-            parentNode: this.loginContainer.getElement(),
+            parentNode: this.passwordInputContainer.getElement(),
         });
+        this.passwordInput.setAttribute({ name: "placeholder", value: "Enter your password here" });
+
+        this.passwordValidationText = new BaseComponent({
+            tagName: "p",
+            classNames: "validation-message",
+            textContent: "validation-message",
+            parentNode: this.passwordInputContainer.getElement(),
+        });
+        this.passwordInput.getElement().addEventListener("input", this.validateInput(this.passwordInput));
+        this.passwordInput.getElement().addEventListener("keydown", this.keyEnterHandler);
 
         this.loginButton = new BaseComponent({
             tagName: "button",
             textContent: "enter",
-            classNames: "login-button",
+            classNames: ["login-button", "disabled"],
             parentNode: this.loginContainer.getElement(),
         });
+        this.loginButton.setAttribute({ name: "disable", value: "true" });
 
         this.loginButton.setOnclick(this.enterHandler);
 
@@ -50,6 +117,39 @@ export class Login extends BaseComponent {
         });
     }
 
+    validateInput = (input: BaseComponent) => () => {
+        const value = (input.getElement() as HTMLInputElement).value;
+        if (input === this.loginInput) {
+            if (!/^[A-Za-z]+$/.test(value)) {
+                this.loginValidationText.setClassName("validation-message-active");
+                this.loginValidationText.setTextContent(`Should contain only letters of eng alphabet.`);
+                this.loginButton.setClassName("disabled");
+            }
+            if (/^[A-Za-z]+$/.test(value)) {
+                this.loginValidationText.removeClassName("validation-message-active");
+            }
+            if (/^[A-Za-z]+$/.test(value) && (this.passwordInput.getElement() as HTMLInputElement).value.length >= 4) {
+                this.loginButton.removeAttribute({ name: "disable" });
+                this.loginButton.removeClassName("disabled");
+            }
+        }
+        if (input === this.passwordInput) {
+            if (value.length < 4) {
+                this.passwordValidationText.setClassName("validation-message-active");
+                this.passwordValidationText.setTextContent(`Should contain at least 4 characters.`);
+                this.loginButton.setClassName("disabled");
+            }
+
+            if (value.length >= 4) {
+                this.passwordValidationText.removeClassName("validation-message-active");
+            }
+            if (/^[A-Za-z]+$/.test((this.loginInput.getElement() as HTMLInputElement).value) && value.length >= 4) {
+                this.loginButton.removeAttribute({ name: "disable" });
+                this.loginButton.removeClassName("disabled");
+            }
+        }
+    };
+
     enterHandler = () => {
         const payload = {
             user: {
@@ -58,5 +158,15 @@ export class Login extends BaseComponent {
             },
         };
         socketSend("USER_LOGIN", payload);
+    };
+
+    keyEnterHandler = (e: KeyboardEvent) => {
+        if (
+            /^[A-Za-z]+$/.test((this.loginInput.getElement() as HTMLInputElement).value) &&
+            (this.passwordInput.getElement() as HTMLInputElement).value.length >= 4 &&
+            e.key === "Enter"
+        ) {
+            this.enterHandler();
+        }
     };
 }

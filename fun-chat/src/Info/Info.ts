@@ -19,7 +19,7 @@ export class Info extends BaseComponent {
 
         this.infoLink = new BaseComponent({
             tagName: "a",
-            textContent: "Author Timoshenkovanadya",
+            textContent: "create by Timoshenkovanadya",
             classNames: "info-link",
             parentNode: this.infoContainer.getElement(),
         });
