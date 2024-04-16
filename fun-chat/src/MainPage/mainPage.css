@@ -1,0 +1,15 @@
+
+.header-container {
+    /* border: 1px solid #140114; */
+    display:flex;
+    justify-content: space-around;
+    flex-direction: row;
+    font-size: 20px;    
+}
+.header-button {
+    background-color: #f2dcf2;
+    height: 25px;
+    width: 150px;
+    border-color: #140114;
+    border-radius: 5px;
+}

@@ -1,55 +1,11 @@
 body{
     background-color: #d9c5d8;
-}
-/* .login-container{
-    font-size: 20px;
-    margin-top: 200px;
-    gap: 10px;
-    color:#0d010c;      
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+    color:#0d010c; 
+    
+    
 
-.input,
-.login-button,
-.info-button,
-.back-button {
-    background-color: #f2dcf2;
-    height: 25px;
-    width: 200px;
-    border-color: #140114;
-    border-radius: 5px;
 }
-.disabled{
-    opacity:0.5;
+.app-container {
+    
+    
 }
-
-.info-container {
-    font-size: 20px;
-    margin-top: 200px;
-    gap: 10px;
-    color:#0d010c;      
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.info-link {
-    text-decoration: none;
-}
-.invalid {
-    color:red;
-}
-
-.validation-message {
-    font-size: 12px;
-    display: none;
-}
-
-.validation-message-active {
-    display: block;
-    font-size: 12px;
-    color: red;
-} */

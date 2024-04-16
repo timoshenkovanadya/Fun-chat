@@ -1,7 +1,8 @@
 import { BaseComponent, BaseComponentProps } from "../../BaseComponent/BaseComponent";
-import '../mainPage.css';
+import { SessionStorage } from "../../sessionStorage/sessionStorage";
+import "../mainPage.css";
 
-export class Header extends BaseComponent{
+export class Header extends BaseComponent {
     public headerContainer: BaseComponent;
 
     public userName: BaseComponent;
@@ -12,11 +13,14 @@ export class Header extends BaseComponent{
 
     public logoutButton: BaseComponent;
 
+    public sessionStorage: SessionStorage;
 
     constructor(props: BaseComponentProps) {
-         super(props);
+        super(props);
 
-         this.headerContainer = new BaseComponent({
+        this.sessionStorage = new SessionStorage();
+        const login = sessionStorage.getItem("login");
+        this.headerContainer = new BaseComponent({
             tagName: "div",
             classNames: "header-container",
             parentNode: this.element,
@@ -25,6 +29,7 @@ export class Header extends BaseComponent{
         this.userName = new BaseComponent({
             tagName: "div",
             classNames: "username",
+            textContent: `Username: ${login}`,
             parentNode: this.headerContainer.getElement(),
         });
 
@@ -48,8 +53,5 @@ export class Header extends BaseComponent{
             textContent: "logout",
             parentNode: this.headerContainer.getElement(),
         });
-
-
-
     }
 }
