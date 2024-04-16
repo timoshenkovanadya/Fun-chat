@@ -22,6 +22,7 @@ export class App {
         this.parent = parent;
         this.login = new Login({ tagName: "div", parentNode: this.appContainer });
         this.info = new Info({ tagName: "div", parentNode: this.appContainer });
+        this.info.infoButton.setOnclick(this.backHandler);
         this.login.loginInput.getElement().addEventListener("keydown", this.keyEnterHandler);
         this.login.passwordInput.getElement().addEventListener("keydown", this.keyEnterHandler);
         this.login.loginButton.setOnclick(this.renderMain);
@@ -38,6 +39,15 @@ export class App {
             e.key === "Enter"
         ) {
             this.renderMain();
+        }
+    };
+
+    backHandler = () => {
+        if (sessionStorage.getItem('login') !== null) {
+            this.renderMain()
+        }
+        else {
+            this.renderLogin()
         }
     };
 
