@@ -1,6 +1,6 @@
 export class SessionStorage {
     checkIsLogged() {
-        return !!sessionStorage.getItem('Login') && !!sessionStorage.getItem('password');
+        return !!sessionStorage.getItem('login') && !!sessionStorage.getItem('password');
     }
 
     logout() {

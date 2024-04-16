@@ -1,5 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponent";
-import { MainPage } from "../MainPage/MainPage";
+
 import { SessionStorage } from "../sessionStorage/sessionStorage";
 import { socket, socketSend } from "../socket/socket";
 import './LoginPage.css';
@@ -117,7 +117,7 @@ export class Login extends BaseComponent {
         });
         this.loginButton.setAttribute({ name: "disable", value: "true" });
 
-        this.loginButton.setOnclick(this.enterHandler);
+        this.loginButton.getElement().addEventListener('click', this.enterHandler);
 
         this.infoButton = new BaseComponent({
             tagName: "button",

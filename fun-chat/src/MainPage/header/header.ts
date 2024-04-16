@@ -1,6 +1,7 @@
 import { BaseComponent, BaseComponentProps } from "../../BaseComponent/BaseComponent";
 import { SessionStorage } from "../../sessionStorage/sessionStorage";
-import "../mainPage.css";
+import { socketSend } from "../../socket/socket";
+import "../MainPage.css";
 
 export class Header extends BaseComponent {
     public headerContainer: BaseComponent;
@@ -53,5 +54,17 @@ export class Header extends BaseComponent {
             textContent: "logout",
             parentNode: this.headerContainer.getElement(),
         });
+        this.logoutButton.getElement().addEventListener("click", this.logoutHandler);
+    }
+
+    logoutHandler =() => {
+        const payload = {
+            user: {
+                login: sessionStorage.getItem("login"),
+                password: sessionStorage.getItem("password"),
+            },
+        };
+        socketSend("USER_LOGOUT", payload);
+        this.sessionStorage.logout();
     }
 }

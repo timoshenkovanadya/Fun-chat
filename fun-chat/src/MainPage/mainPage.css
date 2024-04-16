@@ -1,4 +1,10 @@
 
+.main-page-container {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
 .header-container {
     /* border: 1px solid #140114; */
     display:flex;
@@ -12,4 +18,15 @@
     width: 150px;
     border-color: #140114;
     border-radius: 5px;
+}
+
+.footer-container {
+    display:flex;
+    justify-content: space-around;
+    flex-direction: row;
+    font-size: 20px;    
+}
+
+.footer-link {
+    text-decoration: none;
 }

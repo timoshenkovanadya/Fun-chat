@@ -28,8 +28,9 @@ export class App {
         this.login.loginButton.setOnclick(this.renderMain);
         this.login.infoButton.setOnclick(this.renderInfo);
         this.socket = socket;
-        this.mainPage = new MainPage({ tagName: "div", parentNode: this.appContainer });
+        this.mainPage = new MainPage({ tagName: "div", classNames: "main-page-container", parentNode: this.appContainer });
         this.mainPage.header.infoButton.setOnclick(this.renderInfo);
+        this.mainPage.header.logoutButton.setOnclick(this.renderLogin);
     }
 
     keyEnterHandler = (e: KeyboardEvent) => {
