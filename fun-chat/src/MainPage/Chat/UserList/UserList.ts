@@ -4,8 +4,6 @@ import { UserListItem } from "../UserListItem/UserListItem";
 import { UserType } from "../chat.types";
 
 export class UserList extends BaseComponent {
-   
-
     public activeUsersData: UserType[];
 
     public inactiveUsersData: UserType[];
@@ -31,15 +29,27 @@ export class UserList extends BaseComponent {
             textContent: "",
             parentNode: this.element,
         });
+        this.searchForm.setAttribute({ name: "placeholder", value: "Search..." });
 
-        
+        this.searchForm.getElement().addEventListener("input", () => {
+            const searchText = (this.searchForm.getElement() as HTMLInputElement).value;
+            this.userListItemContainer.getElement().innerHTML = "";
+            const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
+                ({ login }) => login !== this.login
+            );
+            const filteredUsers = allUsersData.filter(({ login }) => login.includes(searchText));
+            filteredUsers.forEach((data) => {
+                const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
+                this.userItemsElements.push(element);
+            });
+        });
+
         this.userListItemContainer = new BaseComponent({
             tagName: "div",
             classNames: "userListItem-container",
             parentNode: this.element,
         });
-        this.searchForm.setAttribute({ name: "placeholder", value: "Search..." });
-       
+
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_ACTIVE") {
@@ -62,7 +72,7 @@ export class UserList extends BaseComponent {
             ({ login }) => login !== this.login
         );
         allUsersData.forEach((data) => {
-            const element = new UserListItem({ ...data, parentNode: this.element });
+            const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
             this.userItemsElements.push(element);
         });
     };
