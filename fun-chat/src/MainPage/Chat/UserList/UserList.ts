@@ -31,18 +31,8 @@ export class UserList extends BaseComponent {
         });
         this.searchForm.setAttribute({ name: "placeholder", value: "Search..." });
 
-        this.searchForm.getElement().addEventListener("input", () => {
-            const searchText = (this.searchForm.getElement() as HTMLInputElement).value;
-            this.userListItemContainer.getElement().innerHTML = "";
-            const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
-                ({ login }) => login !== this.login
-            );
-            const filteredUsers = allUsersData.filter(({ login }) => login.includes(searchText));
-            filteredUsers.forEach((data) => {
-                const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
-                this.userItemsElements.push(element);
-            });
-        });
+        this.searchForm.getElement().addEventListener("input", this.searchingUsers);
+       
 
         this.userListItemContainer = new BaseComponent({
             tagName: "div",
@@ -65,6 +55,20 @@ export class UserList extends BaseComponent {
                 this.login = message.payload.user.login;
             }
         });
+    }
+
+    searchingUsers = () => {
+              const searchText = (this.searchForm.getElement() as HTMLInputElement).value;
+            this.userListItemContainer.getElement().innerHTML = "";
+            const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
+                ({ login }) => login !== this.login
+            );
+            const filteredUsers = allUsersData.filter(({ login }) => login.includes(searchText));
+            filteredUsers.forEach((data) => {
+                const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
+                this.userItemsElements.push(element);
+            });
+        
     }
 
     renderUsersList = () => {
