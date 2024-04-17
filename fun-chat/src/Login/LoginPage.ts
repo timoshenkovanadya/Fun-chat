@@ -2,7 +2,7 @@ import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponen
 
 import { SessionStorage } from "../sessionStorage/sessionStorage";
 import { socket, socketSend } from "../socket/socket";
-import './LoginPage.css';
+import "./LoginPage.css";
 
 export class Login extends BaseComponent {
     public loginContainer: BaseComponent;
@@ -23,18 +23,12 @@ export class Login extends BaseComponent {
 
     public passwordInputContainer: BaseComponent;
 
-    public socket: WebSocket;
-
     public errorMessage: BaseComponent;
 
     public sessionStorage: SessionStorage;
 
-   
-
     constructor(props: BaseComponentProps) {
         super(props);
-
-        
 
         this.sessionStorage = new SessionStorage();
 
@@ -52,9 +46,7 @@ export class Login extends BaseComponent {
             parentNode: this.loginContainer.getElement(),
         });
 
-        this.socket = socket;
-
-        socket.onmessage = (event) => {
+        socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "ERROR") {
                 this.errorMessage.setTextContent(message.payload.error);
@@ -62,7 +54,7 @@ export class Login extends BaseComponent {
                     this.errorMessage.setTextContent("");
                 }, 5000);
             }
-        };
+        });
 
         this.loginInputContainer = new BaseComponent({
             tagName: "div",
@@ -117,7 +109,7 @@ export class Login extends BaseComponent {
         });
         this.loginButton.setAttribute({ name: "disable", value: "true" });
 
-        this.loginButton.getElement().addEventListener('click', this.enterHandler);
+        this.loginButton.getElement().addEventListener("click", this.enterHandler);
 
         this.infoButton = new BaseComponent({
             tagName: "button",

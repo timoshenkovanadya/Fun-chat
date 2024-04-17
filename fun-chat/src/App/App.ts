@@ -10,7 +10,7 @@ export class App {
 
     public login: Login;
 
-    public socket: WebSocket;
+    // public socket: WebSocket;
 
     public info: Info;
 
@@ -23,32 +23,42 @@ export class App {
         this.login = new Login({ tagName: "div", parentNode: this.appContainer });
         this.info = new Info({ tagName: "div", parentNode: this.appContainer });
         this.info.infoButton.setOnclick(this.backHandler);
-        this.login.loginInput.getElement().addEventListener("keydown", this.keyEnterHandler);
-        this.login.passwordInput.getElement().addEventListener("keydown", this.keyEnterHandler);
-        this.login.loginButton.setOnclick(this.renderMain);
+        // this.login.loginInput.getElement().addEventListener("keydown", this.keyEnterHandler);
+        // this.login.passwordInput.getElement().addEventListener("keydown", this.keyEnterHandler);
+        // this.login.loginButton.setOnclick(this.renderMain);
         this.login.infoButton.setOnclick(this.renderInfo);
-        this.socket = socket;
-        this.mainPage = new MainPage({ tagName: "div", classNames: "main-page-container", parentNode: this.appContainer });
+        // this.socket = socket;
+        this.mainPage = new MainPage({
+            tagName: "div",
+            classNames: "main-page-container",
+            parentNode: this.appContainer,
+        });
         this.mainPage.header.infoButton.setOnclick(this.renderInfo);
         this.mainPage.header.logoutButton.setOnclick(this.renderLogin);
+
+        socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "USER_LOGIN") {
+                this.renderMain();
+            }
+        });
     }
 
-    keyEnterHandler = (e: KeyboardEvent) => {
-        if (
-            /^[A-Za-z]+$/.test((this.login.loginInput.getElement() as HTMLInputElement).value) &&
-            (this.login.passwordInput.getElement() as HTMLInputElement).value.length >= 4 &&
-            e.key === "Enter"
-        ) {
-            this.renderMain();
-        }
-    };
+    // keyEnterHandler = (e: KeyboardEvent) => {
+    //     if (
+    //         /^[A-Za-z]+$/.test((this.login.loginInput.getElement() as HTMLInputElement).value) &&
+    //         (this.login.passwordInput.getElement() as HTMLInputElement).value.length >= 4 &&
+    //         e.key === "Enter"
+    //     ) {
+    //         this.renderMain();
+    //     }
+    // };
 
     backHandler = () => {
-        if (sessionStorage.getItem('login') !== null) {
-            this.renderMain()
-        }
-        else {
-            this.renderLogin()
+        if (sessionStorage.getItem("login") !== null) {
+            this.renderMain();
+        } else {
+            this.renderLogin();
         }
     };
 
@@ -69,5 +79,6 @@ export class App {
     renderMain = (): void => {
         this.appContainer.innerHTML = "";
         this.mainPage.render(this.appContainer);
+        this.mainPage.sendInitMessages();
     };
 }

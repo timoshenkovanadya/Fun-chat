@@ -51,14 +51,14 @@ const baseConfig = {
         new miniCssExtractPlugin({ filename: "[name].css" }),
         new CleanWebpackPlugin(),
         // new HtmlWebpackInlineSVGPlugin(),
-        // new CopyPlugin({
-        //     patterns: [
-        //         {
-        //             from: "src/assets/",
-        //             to: "assets",
-        //         },
-        //     ],
-        // }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: "src/assets/",
+                    to: "assets",
+                },
+            ],
+        }),
     ],
 };
 

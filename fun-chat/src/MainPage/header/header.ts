@@ -1,6 +1,6 @@
 import { BaseComponent, BaseComponentProps } from "../../BaseComponent/BaseComponent";
 import { SessionStorage } from "../../sessionStorage/sessionStorage";
-import { socketSend } from "../../socket/socket";
+import { socket, socketSend } from "../../socket/socket";
 import "../MainPage.css";
 
 export class Header extends BaseComponent {
@@ -16,11 +16,17 @@ export class Header extends BaseComponent {
 
     public sessionStorage: SessionStorage;
 
+    public socket: WebSocket;
+
+    public login: string;
+
     constructor(props: BaseComponentProps) {
         super(props);
 
+        this.login = "";
+
         this.sessionStorage = new SessionStorage();
-        const login = sessionStorage.getItem("login");
+
         this.headerContainer = new BaseComponent({
             tagName: "div",
             classNames: "header-container",
@@ -30,9 +36,17 @@ export class Header extends BaseComponent {
         this.userName = new BaseComponent({
             tagName: "div",
             classNames: "username",
-            textContent: `Username: ${login}`,
+            textContent: "",
             parentNode: this.headerContainer.getElement(),
         });
+        this.socket = socket;
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "USER_LOGIN") {
+                this.userName.setTextContent(`Username: ${message.payload.user.login}`);
+            }
+        };
 
         this.chatName = new BaseComponent({
             tagName: "div",
@@ -57,7 +71,7 @@ export class Header extends BaseComponent {
         this.logoutButton.getElement().addEventListener("click", this.logoutHandler);
     }
 
-    logoutHandler =() => {
+    logoutHandler = () => {
         const payload = {
             user: {
                 login: sessionStorage.getItem("login"),
@@ -66,5 +80,9 @@ export class Header extends BaseComponent {
         };
         socketSend("USER_LOGOUT", payload);
         this.sessionStorage.logout();
-    }
+    };
+
+    setLogin = (login: string) => {
+        this.login = login;
+    };
 }

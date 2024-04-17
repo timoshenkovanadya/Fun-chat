@@ -30,8 +30,22 @@ const getId = () => {
 
 export const socket = new WebSocket(URL_WS);
 
-export const socketSend = (type: (typeof RequestTypes)[Keys], payload: object) => {
+export const socketSend = (type: (typeof RequestTypes)[Keys], payload: object | null = null) => {
     const id = getId();
     const message = JSON.stringify({ id, type, payload });
-    socket.send(message);
+    console.log(type, "type");
+    console.log(socket.OPEN, "socket.OPEN");
+    console.log(socket.CONNECTING, "socket.CONNECTING");
+    console.log(socket, "socket");
+    if (socket.OPEN) {
+        socket.send(message);
+    } else {
+        socket.addEventListener(
+            "open",
+            () => {
+                socket.send(message);
+            },
+            { once: true }
+        );
+    }
 };

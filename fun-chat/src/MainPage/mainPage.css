@@ -19,7 +19,23 @@
     border-color: #140114;
     border-radius: 5px;
 }
-
+.chat-container {
+    display:flex;
+    height: 70svh;
+    width: 100%;
+}
+.userList-container {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    width: 35%;
+}
+.search-form {
+    height: 24px;
+    outline: none;
+    padding: 1% 5%;
+    width: 83%;
+}
 .footer-container {
     display:flex;
     justify-content: space-around;

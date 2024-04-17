@@ -1,0 +1,8 @@
+.user-list-item[isLogined="false"] {
+    color: #a1050f;
+}
+.user-list-item[isLogined="true"] {
+    color: #0a4205;
+}
+
+
