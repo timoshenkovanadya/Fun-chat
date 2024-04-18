@@ -4,8 +4,7 @@ import { socket, socketSend } from "../../socket/socket";
 import "../MainPage.css";
 
 export class Header extends BaseComponent {
-    public headerContainer: BaseComponent;
-
+   
     public userName: BaseComponent;
 
     public chatName: BaseComponent;
@@ -27,17 +26,11 @@ export class Header extends BaseComponent {
 
         this.sessionStorage = new SessionStorage();
 
-        this.headerContainer = new BaseComponent({
-            tagName: "div",
-            classNames: "header-container",
-            parentNode: this.element,
-        });
-
         this.userName = new BaseComponent({
             tagName: "div",
             classNames: "username",
             textContent: "",
-            parentNode: this.headerContainer.getElement(),
+            parentNode: this.element,
         });
         this.socket = socket;
 
@@ -52,21 +45,21 @@ export class Header extends BaseComponent {
             tagName: "div",
             classNames: "chat-name",
             textContent: "Fun Chat",
-            parentNode: this.headerContainer.getElement(),
+            parentNode: this.element,
         });
 
         this.infoButton = new BaseComponent({
             tagName: "button",
             classNames: "header-button",
             textContent: "Info",
-            parentNode: this.headerContainer.getElement(),
+            parentNode: this.element,
         });
 
         this.logoutButton = new BaseComponent({
             tagName: "button",
             classNames: "header-button",
             textContent: "logout",
-            parentNode: this.headerContainer.getElement(),
+            parentNode: this.element,
         });
         this.logoutButton.getElement().addEventListener("click", this.logoutHandler);
     }

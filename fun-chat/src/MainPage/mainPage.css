@@ -1,9 +1,10 @@
 
 .main-page-container {
     display: flex;
-    gap: 10px;
+    gap: 30px;
     flex-direction: column;
 }
+
 
 .header-container {
     /* border: 1px solid #140114; */
@@ -19,22 +20,36 @@
     border-color: #140114;
     border-radius: 5px;
 }
+
 .chat-container {
     display:flex;
     height: 70svh;
     width: 100%;
+    gap: 10px;
 }
 .userList-container {
     display: flex;
     flex-direction: column;
     width: 35%;
     gap: 10px;
+    align-items: center;
+    border: 1px solid;
+    border-radius: 5px;
+    display: flex;
+    margin: 1% 0;
+    box-sizing: border-box;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-start;
+    padding: .5%;
+    width: 35%;
 }
 .userListItem-container {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    /* overflow-x:hidden; */
+    width: 90%;
+    
 }
 .search-form {
     height: 24px;
@@ -42,13 +57,96 @@
     padding: 1% 5%;
     width: 83%;
 }
+.message-part {
+    border: 1px solid;
+    border-radius: 5px;
+    box-sizing: border-box;
+    flex-direction: column;
+    height: 100%;
+    margin: 1% 0;
+    padding: .5%;
+    width: 64%;
+}
+
+.message-header {
+    align-items: center;
+    border-bottom: 1px solid;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    height: 10%;
+    justify-content: space-around;
+    margin: 0 0 1%;
+    max-height: 35px;
+    padding: 0 .5% .5%;
+    width: 100%;
+}
+.online {
+    color: #0a4205;
+}
+.offline {
+   color: #a1050f;
+}
+.message-show {
+    align-items: center;
+    height: 80%;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: scroll;
+    padding: 1%;
+    width: 100%;
+}
+.message-send {
+    align-items: center;
+    border-top: 1px solid;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    height: 15%;
+    justify-content: space-around;
+    margin: 1% 0 0;
+    max-height: 35px;
+    padding: .5% .5% 0;
+    width: 100%;
+}
+.message-input {
+    height: 28px;
+    outline: none;
+    padding: 0 5%;
+    width: 70%;
+}
+.send-button {
+    height: 32px;
+    margin: 1%;
+    max-width: 200px;
+    width: 50%;
+}
 .footer-container {
     display:flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     flex-direction: row;
     font-size: 20px;    
 }
-
+.logo {
+    width: 100px;
+    height: 50px;
+}
 .footer-link {
     text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .header-container, .footer-container {
+        font-size: 16px;
+    }
+    .header-button {
+        height: 20px;
+        width: 100px; 
+        font-size: 12px;
+    }
+
 }

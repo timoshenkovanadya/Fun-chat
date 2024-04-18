@@ -14,7 +14,7 @@ export class MainPage extends BaseComponent {
 
     constructor(props: BaseComponentProps) {
         super(props);
-        this.header = new Header({ tagName: "div", parentNode: this.element });
+        this.header = new Header({ tagName: "div", classNames: "header-container", parentNode: this.element });
         this.chat = new Chat({ tagName: "div", classNames: "chat-container", parentNode: this.element });
         this.footer = new Footer({ tagName: "div", classNames: "footer-container", parentNode: this.element });
     }

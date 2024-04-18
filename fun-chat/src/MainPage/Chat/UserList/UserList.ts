@@ -3,6 +3,10 @@ import { socket } from "../../../socket/socket";
 import { UserListItem } from "../UserListItem/UserListItem";
 import { UserType } from "../chat.types";
 
+type ClickHandlerType = (login: string, isLogined: boolean) => () => void;
+
+type PropsType = BaseComponentProps & { clickHandler: ClickHandlerType };
+
 export class UserList extends BaseComponent {
     public activeUsersData: UserType[];
 
@@ -16,12 +20,15 @@ export class UserList extends BaseComponent {
 
     public userListItemContainer: BaseComponent;
 
-    constructor(props: BaseComponentProps) {
+    public clickHandler: ClickHandlerType;
+
+    constructor({ clickHandler, ...props }: PropsType) {
         super(props);
         this.login = "";
         this.activeUsersData = [];
         this.inactiveUsersData = [];
         this.userItemsElements = [];
+        this.clickHandler = clickHandler;
 
         this.searchForm = new BaseComponent({
             tagName: "input",
@@ -32,7 +39,6 @@ export class UserList extends BaseComponent {
         this.searchForm.setAttribute({ name: "placeholder", value: "Search..." });
 
         this.searchForm.getElement().addEventListener("input", this.searchingUsers);
-       
 
         this.userListItemContainer = new BaseComponent({
             tagName: "div",
@@ -58,18 +64,18 @@ export class UserList extends BaseComponent {
     }
 
     searchingUsers = () => {
-              const searchText = (this.searchForm.getElement() as HTMLInputElement).value;
-            this.userListItemContainer.getElement().innerHTML = "";
-            const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
-                ({ login }) => login !== this.login
-            );
-            const filteredUsers = allUsersData.filter(({ login }) => login.includes(searchText));
-            filteredUsers.forEach((data) => {
-                const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
-                this.userItemsElements.push(element);
-            });
-        
-    }
+        const searchText = (this.searchForm.getElement() as HTMLInputElement).value;
+        this.userListItemContainer.getElement().innerHTML = "";
+        const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
+            ({ login }) => login !== this.login
+        );
+        const filteredUsers = allUsersData.filter(({ login }) => login.includes(searchText));
+        filteredUsers.forEach((data) => {
+            const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
+            element.setOnclick(this.clickHandler(data.login, data.isLogined));
+            this.userItemsElements.push(element);
+        });
+    };
 
     renderUsersList = () => {
         const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
@@ -77,6 +83,7 @@ export class UserList extends BaseComponent {
         );
         allUsersData.forEach((data) => {
             const element = new UserListItem({ ...data, parentNode: this.userListItemContainer.getElement() });
+            element.setOnclick(this.clickHandler(data.login, data.isLogined));
             this.userItemsElements.push(element);
         });
     };
