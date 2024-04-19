@@ -98,7 +98,28 @@
     overflow-y: scroll;
     padding: 1%;
     width: 100%;
+    gap: 20px;
 }
+.message-item-container {
+    width: 100%;
+}
+.income-message {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: aquamarine;
+    display: flex;
+    align-items: flex-start;
+}
+
+.outcome-message {
+    display: flex;
+    flex-direction: column;
+    background-color: aquamarine;
+    display: flex;
+    align-items: flex-end;
+}
+
 .message-send {
     align-items: center;
     border-top: 1px solid;

@@ -4,7 +4,6 @@ import { socket, socketSend } from "../../socket/socket";
 import "../MainPage.css";
 
 export class Header extends BaseComponent {
-   
     public userName: BaseComponent;
 
     public chatName: BaseComponent;
@@ -17,29 +16,31 @@ export class Header extends BaseComponent {
 
     public socket: WebSocket;
 
-    public login: string;
+    public login: string | null;
 
     constructor(props: BaseComponentProps) {
         super(props);
 
-        this.login = "";
+        this.login = sessionStorage.getItem("login");
 
         this.sessionStorage = new SessionStorage();
 
         this.userName = new BaseComponent({
             tagName: "div",
             classNames: "username",
-            textContent: "",
+            textContent: `Username: ${this.login}`,
             parentNode: this.element,
         });
         this.socket = socket;
 
-        socket.onmessage = (event) => {
+        socket.addEventListener('message', (event) => {
             const message = JSON.parse(event.data);
+            console.log(message, "message");
             if (message.type === "USER_LOGIN") {
-                this.userName.setTextContent(`Username: ${message.payload.user.login}`);
+                this.login = message.payload.user.login;
+                this.userName.setTextContent(`Username: ${this.login}`)
             }
-        };
+        });
 
         this.chatName = new BaseComponent({
             tagName: "div",

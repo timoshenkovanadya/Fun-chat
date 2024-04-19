@@ -87,4 +87,5 @@ export class UserList extends BaseComponent {
             this.userItemsElements.push(element);
         });
     };
+    
 }

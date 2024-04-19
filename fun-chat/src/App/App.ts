@@ -64,6 +64,14 @@ export class App {
 
     start = () => {
         this.parent.append(this.appContainer);
+        if (sessionStorage.getItem("login") !== null) {
+            if (socket) {
+                socket.addEventListener("open", this.renderMain);
+                
+            }
+        } else {
+            this.renderLogin();
+        }
     };
 
     renderLogin = (): void => {

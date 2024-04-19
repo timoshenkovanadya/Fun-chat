@@ -1,7 +1,9 @@
-import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent"
+import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent";
+import { MsgType } from "../chat.types";
+
+type PropsType = Pick<BaseComponentProps, "parentNode"> & MsgType & { login: string };
 
 export class MessageItemContainer extends BaseComponent {
-
     public messageItem: BaseComponent;
 
     public messageItemHeader: BaseComponent;
@@ -10,37 +12,40 @@ export class MessageItemContainer extends BaseComponent {
 
     public messageItemFooter: BaseComponent;
 
-    constructor(props: BaseComponentProps) {
-        super(props);
+    constructor(props: PropsType) {
+        const { parentNode, login, from, to, text, datetime, status } = props;
+        super({ tagName: "div", classNames: "message-item-container", parentNode });
 
-        this.messageItem = new BaseComponent ({
+        const isIncome = login === to;
+        const delivered = status.isDelivered === true;
+        const readed = status.isReaded === true;
+        const edited = status.isEdited === true;
+
+        this.messageItem = new BaseComponent({
             tagName: "div",
-            classNames: "message-item",
-            textContent: "",
+            classNames: isIncome ? "income-message" : "outcome-message",
             parentNode: this.element,
         });
 
-        this.messageItemHeader = new BaseComponent ({
+        this.messageItemHeader = new BaseComponent({
             tagName: "div",
             classNames: "message-item-header",
-            textContent: "",
+            textContent: `${isIncome ? from : 'you'}     ${new Date(datetime).toUTCString()}`,
             parentNode: this.messageItem.getElement(),
         });
 
-       this.messageItemText = new BaseComponent ({
+        this.messageItemText = new BaseComponent({
             tagName: "div",
             classNames: "message-item-text",
-            textContent: "",
+            textContent: text,
             parentNode: this.messageItem.getElement(),
         });
 
-        this.messageItemFooter = new BaseComponent ({
+        this.messageItemFooter = new BaseComponent({
             tagName: "div",
             classNames: "message-item-footer",
-            textContent: "",
+            textContent: isIncome ? "" : (delivered ? "Delivered" : (readed ? "read" : (edited ? "edited": ""))),
             parentNode: this.messageItem.getElement(),
         });
-
-
     }
 }
