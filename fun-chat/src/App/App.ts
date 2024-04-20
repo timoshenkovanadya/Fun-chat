@@ -1,7 +1,7 @@
 import { Info } from "../Info/Info";
 import { Login } from "../Login/LoginPage";
 import { MainPage } from "../MainPage/MainPage";
-import { socket } from "../socket/socket";
+import { socket, socketSend } from "../socket/socket";
 
 export class App {
     public appContainer: HTMLElement;
@@ -36,15 +36,13 @@ export class App {
         });
     }
 
-   
-
     init = () => {
         this.login = new Login({ tagName: "div", parentNode: this.appContainer });
         this.info = new Info({ tagName: "div", parentNode: this.appContainer });
         this.info.infoButton.setOnclick(this.backHandler);
-       
+
         this.login.infoButton.setOnclick(this.renderInfo);
-       
+
         this.mainPage = new MainPage({
             tagName: "div",
             classNames: "main-page-container",
@@ -66,7 +64,16 @@ export class App {
         this.parent.append(this.appContainer);
         if (sessionStorage.getItem("login") !== null) {
             if (socket) {
-                socket.addEventListener("open", this.renderMain);
+                socket.addEventListener("open", () => {
+                    const payload = {
+                        user: {
+                            login: sessionStorage.getItem("login"),
+                            password: sessionStorage.getItem("password"),
+                        },
+                    };
+                    socketSend("USER_LOGIN", payload);
+                    this.renderMain();
+                });
             }
         } else {
             this.renderLogin();
