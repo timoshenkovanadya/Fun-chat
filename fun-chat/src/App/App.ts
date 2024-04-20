@@ -10,8 +10,6 @@ export class App {
 
     public login: Login | null;
 
-    // public socket: WebSocket;
-
     public info: Info | null;
 
     public mainPage: MainPage | null;
@@ -38,25 +36,15 @@ export class App {
         });
     }
 
-    // keyEnterHandler = (e: KeyboardEvent) => {
-    //     if (
-    //         /^[A-Za-z]+$/.test((this.login.loginInput.getElement() as HTMLInputElement).value) &&
-    //         (this.login.passwordInput.getElement() as HTMLInputElement).value.length >= 4 &&
-    //         e.key === "Enter"
-    //     ) {
-    //         this.renderMain();
-    //     }
-    // };
+   
 
     init = () => {
         this.login = new Login({ tagName: "div", parentNode: this.appContainer });
         this.info = new Info({ tagName: "div", parentNode: this.appContainer });
         this.info.infoButton.setOnclick(this.backHandler);
-        // this.login.loginInput.getElement().addEventListener("keydown", this.keyEnterHandler);
-        // this.login.passwordInput.getElement().addEventListener("keydown", this.keyEnterHandler);
-        // this.login.loginButton.setOnclick(this.renderMain);
+       
         this.login.infoButton.setOnclick(this.renderInfo);
-        // this.socket = socket;
+       
         this.mainPage = new MainPage({
             tagName: "div",
             classNames: "main-page-container",

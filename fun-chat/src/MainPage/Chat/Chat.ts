@@ -46,41 +46,13 @@ export class Chat extends BaseComponent {
                     });
                     this.messages.push(msgContainer);
                 });
-
-                // if (message.id === null) {
-                //     this.messagePart.messageShow.setTextContent("");
-                //     const messageItemContainer = new MessageItemContainer({
-                //         tagName: "div",
-                //         classNames: "message-item-container",
-                //         parentNode: this.messagePart.messageShow.getElement(),
-                //     });
-
-                //     messageItemContainer.messageItem.setClassName("incoming");
-                //     messageItemContainer.messageItemHeader.setTextContent(
-                //         `${message.payload.message.from} at ${message.payload.message.datetime}`
-                //     );
-                //     messageItemContainer.messageItemText.setTextContent(`${message.payload.message.text}`);
-                // }
-
-                // if (message.id !== null) {
-                //     this.messagePart.messageShow.setTextContent("");
-                //     const messageItemContainer = new MessageItemContainer({
-                //         tagName: "div",
-                //         classNames: "message-item-container",
-                //         parentNode: this.messagePart.messageShow.getElement(),
-                //     });
-                //     messageItemContainer.messageItem.setClassName("outcoming");
-                //     messageItemContainer.messageItemHeader.setTextContent(`You at ${message.payload.message.datetime}`);
-                //     messageItemContainer.messageItemText.setTextContent(`${message.payload.message.text}`);
-                //     messageItemContainer.messageItemFooter.setTextContent("Delivered");
-                // }
             }
         });
     }
 
     clickUserItem = (login: string, isLogined: boolean) => () => {
         this.messagePart.setUser(login, isLogined);
-        this.messagePart.sendButton.removeAttribute({name: "disabled"})
+        this.messagePart.sendButton.removeAttribute({ name: "disabled" });
     };
 
     sendMessage = () => {

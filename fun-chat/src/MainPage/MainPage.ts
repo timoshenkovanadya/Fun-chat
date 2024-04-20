@@ -1,6 +1,6 @@
 import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponent";
 import { SessionStorage } from "../sessionStorage/sessionStorage";
-import { socketSend } from "../socket/socket";
+import { socket, socketSend } from "../socket/socket";
 import { Chat } from "./Chat/Chat";
 import { Footer } from "./Footer/footer";
 import { Header } from "./header/header";
@@ -21,22 +21,14 @@ export class MainPage extends BaseComponent {
         this.header = new Header({ tagName: "div", classNames: "header-container", parentNode: this.element });
         this.chat = new Chat({ tagName: "div", classNames: "chat-container", parentNode: this.element });
         this.footer = new Footer({ tagName: "div", classNames: "footer-container", parentNode: this.element });
-        // this.header.logoutButton.getElement().addEventListener("click", this.logoutHandler);
+        socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "USER_EXTERNAL_LOGIN" || message.type === "USER_EXTERNAL_LOGOUT") {
+                this.sendInitMessages();
+                
+            }
+        });
     }
-
-    logoutHandler = () => {
-        const payload = {
-            user: {
-                login: sessionStorage.getItem("login"),
-                password: sessionStorage.getItem("password"),
-            },
-        };
-        socketSend("USER_LOGOUT", payload);
-        this.sessionStorage.logout();
-        
-        // this.chat.messagePart.messageHeader.setTextContent('');
-        
-    };
 
     sendInitMessages = () => {
         socketSend("USER_ACTIVE");
