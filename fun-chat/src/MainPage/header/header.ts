@@ -33,12 +33,12 @@ export class Header extends BaseComponent {
         });
         this.socket = socket;
 
-        socket.addEventListener('message', (event) => {
+        socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             console.log(message, "message");
             if (message.type === "USER_LOGIN") {
                 this.login = message.payload.user.login;
-                this.userName.setTextContent(`Username: ${this.login}`)
+                this.userName.setTextContent(`Username: ${this.login}`);
             }
         });
 

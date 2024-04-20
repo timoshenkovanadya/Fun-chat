@@ -18,6 +18,7 @@ export class MessagePart extends BaseComponent {
         this.login = "";
         this.messageHeader = new BaseComponent({
             tagName: "div",
+            textContent: '',
             classNames: "message-header",
             parentNode: this.element,
         });
@@ -48,6 +49,7 @@ export class MessagePart extends BaseComponent {
             textContent: "send",
             parentNode: this.messageSend.getElement(),
         });
+        this.sendButton.setAttribute({name: 'disabled', value: "true"})
     }
 
     setUser = (login: string, isLogined: boolean) => {

@@ -80,6 +80,7 @@ export class Chat extends BaseComponent {
 
     clickUserItem = (login: string, isLogined: boolean) => () => {
         this.messagePart.setUser(login, isLogined);
+        this.messagePart.sendButton.removeAttribute({name: "disabled"})
     };
 
     sendMessage = () => {

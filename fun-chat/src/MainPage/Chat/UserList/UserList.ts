@@ -56,6 +56,9 @@ export class UserList extends BaseComponent {
                 this.inactiveUsersData = message.payload.users;
                 this.renderUsersList();
             }
+            if (message.type === "USER_EXTERNAL_LOGIN") {
+                this.renderUsersList();
+            }
 
             if (message.type === "USER_LOGIN") {
                 this.login = message.payload.user.login;
@@ -78,6 +81,7 @@ export class UserList extends BaseComponent {
     };
 
     renderUsersList = () => {
+        this.userListItemContainer.getElement().innerHTML= "";
         const allUsersData = [...this.activeUsersData, ...this.inactiveUsersData].filter(
             ({ login }) => login !== this.login
         );

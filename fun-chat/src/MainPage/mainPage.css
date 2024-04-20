@@ -82,7 +82,7 @@
     width: 100%;
 }
 .online {
-    color: #0a4205;
+    color: green;
 }
 .offline {
    color: #a1050f;
