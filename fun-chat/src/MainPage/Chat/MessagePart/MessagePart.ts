@@ -1,4 +1,6 @@
 import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent";
+import { socket } from "../../../socket/socket";
+import { UserType } from "../chat.types";
 
 export class MessagePart extends BaseComponent {
     public messageHeader: BaseComponent;
@@ -18,7 +20,7 @@ export class MessagePart extends BaseComponent {
         this.login = "";
         this.messageHeader = new BaseComponent({
             tagName: "div",
-            textContent: '',
+            textContent: "",
             classNames: "message-header",
             parentNode: this.element,
         });
@@ -49,18 +51,37 @@ export class MessagePart extends BaseComponent {
             textContent: "send",
             parentNode: this.messageSend.getElement(),
         });
-        this.sendButton.setAttribute({name: 'disabled', value: "true"})
+        this.sendButton.setAttribute({ name: "disabled", value: "true" });
+
+        socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "USER_ACTIVE") {
+                const activeUsers: UserType[] = message.payload.users;
+                if (activeUsers.some(user => user.login === this.messageHeader.getTextContent())) {
+                    this.messageHeader.removeClassName("offline");
+                    this.messageHeader.setClassName("online");
+                }
+            }
+            if (message.type === "USER_INACTIVE") {
+                const inactiveUsers: UserType[] = message.payload.users;
+                if (inactiveUsers.some(user => user.login === this.messageHeader.getTextContent())) {
+                    this.messageHeader.removeClassName("online");
+                    this.messageHeader.setClassName("offline");
+                }
+            }
+        });
     }
 
     setUser = (login: string, isLogined: boolean) => {
         this.messageHeader.setTextContent(`${login}`);
-        this.messageShow.setTextContent('');
+        this.messageShow.setTextContent("");
         if (isLogined === true) {
-            this.messageHeader.setClassName('online')
+            this.messageHeader.removeClassName("offline");
+            this.messageHeader.setClassName("online");
         }
         if (isLogined === false) {
-            this.messageHeader.setClassName('offline')
+            this.messageHeader.removeClassName("online");
+            this.messageHeader.setClassName("offline");
         }
-        
     };
 }
