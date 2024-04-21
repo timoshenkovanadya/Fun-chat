@@ -19,6 +19,7 @@ export class MainPage extends BaseComponent {
         super(props);
         this.sessionStorage = new SessionStorage();
         this.header = new Header({ tagName: "div", classNames: "header-container", parentNode: this.element });
+        
         this.chat = new Chat({ tagName: "div", classNames: "chat-container", parentNode: this.element });
         this.footer = new Footer({ tagName: "div", classNames: "footer-container", parentNode: this.element });
         socket.addEventListener("message", (event) => {

@@ -44,4 +44,5 @@ export const socketSend = (type: (typeof RequestTypes)[Keys], payload: object | 
             { once: true }
         );
     }
+    return id;
 };

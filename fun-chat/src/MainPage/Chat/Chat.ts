@@ -15,10 +15,13 @@ export class Chat extends BaseComponent {
 
     public messages: MessageItemContainer[];
 
+    public requestId: string;
+
     constructor(props: BaseComponentProps) {
         super(props);
         this.messages = [];
         this.login = "";
+        this.requestId = "";
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
@@ -37,7 +40,7 @@ export class Chat extends BaseComponent {
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
-            if (message.type === "MSG_FROM_USER") {
+            if (message.type === "MSG_FROM_USER" && message.id === this.requestId) {
                 message.payload.messages.forEach((msg: MsgType) => {
                     const msgContainer = new MessageItemContainer({
                         parentNode: this.messagePart.messageShow.getElement(),
@@ -53,6 +56,12 @@ export class Chat extends BaseComponent {
     clickUserItem = (login: string, isLogined: boolean) => () => {
         this.messagePart.setUser(login, isLogined);
         this.messagePart.sendButton.removeAttribute({ name: "disabled" });
+        const payload = {
+            user: {
+                login: login,
+            },
+        };
+        this.requestId = socketSend("MSG_FROM_USER", payload);
     };
 
     sendMessage = () => {
@@ -67,13 +76,12 @@ export class Chat extends BaseComponent {
     };
 
     getHistoryMessage = () => {
-        console.log(this.messagePart.messageHeader.getTextContent(), "this.messagePart.messageHeader.getTextContent()");
         const payload = {
             user: {
                 login: this.messagePart.messageHeader.getTextContent(),
             },
         };
-        socketSend("MSG_FROM_USER", payload);
+        this.requestId = socketSend("MSG_FROM_USER", payload);
     };
 
     renderMessages = () => {};
