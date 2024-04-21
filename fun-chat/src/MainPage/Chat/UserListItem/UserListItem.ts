@@ -43,5 +43,19 @@ export class UserListItem extends BaseComponent {
                 }
             }
         });
+
+        socket.addEventListener('message', (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "MSG_SEND" && message.id === null) {
+                socketSend("MSG_FROM_USER", payload);
+            };
+            if (message.type === "MSG_READ") {
+                socketSend("MSG_FROM_USER", payload);
+            };
+            if (message.type === "MSG_DELETE") {
+                socketSend("MSG_FROM_USER", payload);
+            };
+            
+        })
     }
 }
