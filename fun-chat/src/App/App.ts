@@ -37,19 +37,18 @@ export class App {
     }
 
     init = () => {
-        this.login = new Login({ tagName: "div", parentNode: this.appContainer });
-        this.info = new Info({ tagName: "div", parentNode: this.appContainer });
-        this.info.infoButton.setOnclick(this.backHandler);
-
+        this.login = new Login({ tagName: "div" });
         this.login.infoButton.setOnclick(this.renderInfo);
 
         this.mainPage = new MainPage({
             tagName: "div",
             classNames: "main-page-container",
-            parentNode: this.appContainer,
         });
         this.mainPage.header.infoButton.setOnclick(this.renderInfo);
         this.mainPage.header.logoutButton.setOnclick(this.renderLogin);
+
+        this.info = new Info({ tagName: "div" });
+        this.info.infoButton.setOnclick(this.backHandler);
     };
 
     backHandler = () => {
