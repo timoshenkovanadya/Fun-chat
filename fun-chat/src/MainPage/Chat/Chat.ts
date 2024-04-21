@@ -67,6 +67,7 @@ export class Chat extends BaseComponent {
     };
 
     getHistoryMessage = () => {
+        console.log(this.messagePart.messageHeader.getTextContent(), "this.messagePart.messageHeader.getTextContent()");
         const payload = {
             user: {
                 login: this.messagePart.messageHeader.getTextContent(),

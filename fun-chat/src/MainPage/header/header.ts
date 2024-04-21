@@ -35,7 +35,6 @@ export class Header extends BaseComponent {
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
-            console.log(message, "message");
             if (message.type === "USER_LOGIN") {
                 this.login = message.payload.user.login;
                 this.userName.setTextContent(`Username: ${this.login}`);
