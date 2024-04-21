@@ -73,6 +73,8 @@ export class Chat extends BaseComponent {
         };
         socketSend("MSG_SEND", payload);
         (this.messagePart.messageInput.getElement() as HTMLInputElement).value = "";
+        this.messages.forEach((element) => element.destroy());
+        this.messages = [];
     };
 
     getHistoryMessage = () => {

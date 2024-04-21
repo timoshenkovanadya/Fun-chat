@@ -37,25 +37,27 @@ export class UserListItem extends BaseComponent {
             if (message.type === "MSG_FROM_USER") {
                 const respMessages = message.payload.messages as MsgType[];
                 // is messages from this contact
-                if (respMessages?.[0]?.from === login) {
-                    const countUnread = respMessages.reduce((acc, cur) => (cur.status.isReaded ? acc : acc + 1), 0) || 0;
+                if (respMessages?.some((msg) => msg.from === login)) {
+                    const countUnread =
+                        respMessages
+                            .filter((msg) => msg.from === login)
+                            .reduce((acc, cur) => (cur.status.isReaded ? acc : acc + 1), 0) || 0;
                     this.userListItemNumber.setTextContent(countUnread.toString());
                 }
             }
         });
 
-        socket.addEventListener('message', (event) => {
+        socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_SEND" && message.id === null) {
                 socketSend("MSG_FROM_USER", payload);
-            };
+            }
             if (message.type === "MSG_READ") {
                 socketSend("MSG_FROM_USER", payload);
-            };
+            }
             if (message.type === "MSG_DELETE") {
                 socketSend("MSG_FROM_USER", payload);
-            };
-            
-        })
+            }
+        });
     }
 }
