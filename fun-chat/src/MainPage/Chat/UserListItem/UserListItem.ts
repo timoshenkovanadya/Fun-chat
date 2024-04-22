@@ -30,7 +30,6 @@ export class UserListItem extends BaseComponent {
         });
 
         const payload = { user: { login } };
-
         socketSend("MSG_FROM_USER", payload);
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
@@ -42,22 +41,25 @@ export class UserListItem extends BaseComponent {
                         respMessages
                             .filter((msg) => msg.from === login)
                             .reduce((acc, cur) => (cur.status.isReaded ? acc : acc + 1), 0) || 0;
-                            if (countUnread === 0) { this.userListItemNumber.setTextContent('')};
-                            if (countUnread > 0) {
-                    this.userListItemNumber.setTextContent(countUnread.toString())};
+                    if (countUnread === 0) {
+                        this.userListItemNumber.setTextContent("");
+                    }
+                    if (countUnread > 0) {
+                        this.userListItemNumber.setTextContent(countUnread.toString());
+                    }
                 }
             }
         });
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
-            if (message.type === "MSG_SEND" && message.id === null) {
+            if (message.type === "MSG_SEND" && message.id === null && payload.user.login) {
                 socketSend("MSG_FROM_USER", payload);
             }
-            if (message.type === "MSG_READ") {
-                socketSend("MSG_FROM_USER", payload);
-            }
-            if (message.type === "MSG_DELETE") {
+            // if (message.type === "MSG_READ" && payload.user.login) {
+            //     socketSend("MSG_FROM_USER", payload);
+            // }
+            if (message.type === "MSG_DELETE" && payload.user.login) {
                 socketSend("MSG_FROM_USER", payload);
             }
         });

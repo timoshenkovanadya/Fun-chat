@@ -27,8 +27,16 @@ export class Login extends BaseComponent {
 
     public sessionStorage: SessionStorage;
 
+    public login: string;
+
+    public password: string;
+
     constructor(props: BaseComponentProps) {
         super(props);
+
+        this.login = "";
+
+        this.password = "";
 
         this.sessionStorage = new SessionStorage();
 
@@ -153,10 +161,12 @@ export class Login extends BaseComponent {
     };
 
     enterHandler = () => {
+        this.login = (this.loginInput.getElement() as HTMLInputElement).value;
+        this.password = (this.passwordInput.getElement() as HTMLInputElement).value;
         const payload = {
             user: {
-                login: (this.loginInput.getElement() as HTMLInputElement).value,
-                password: (this.passwordInput.getElement() as HTMLInputElement).value,
+                login: this.login,
+                password: this.password,
             },
         };
         socketSend("USER_LOGIN", payload);

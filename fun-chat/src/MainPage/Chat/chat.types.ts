@@ -1,4 +1,4 @@
-export type UserType = { login: "xfgncgn"; isLogined: true };
+export type UserType = { login: string; isLogined: true };
 
 export type MsgType = {
     id: string;

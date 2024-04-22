@@ -13,6 +13,8 @@ export class Chat extends BaseComponent {
 
     public login: string;
 
+    public recipient: string;
+
     public messages: MessageItemContainer[];
 
     public requestId: string;
@@ -26,6 +28,7 @@ export class Chat extends BaseComponent {
         this.incomeIds = [];
         this.messages = [];
         this.login = "";
+        this.recipient = "";
         this.requestId = "";
         this.editMsgId = "";
         socket.addEventListener("message", (event) => {
@@ -41,7 +44,7 @@ export class Chat extends BaseComponent {
             clickHandler: this.clickUserItem,
         });
         this.messagePart = new MessagePart({ tagName: "div", classNames: "message-part", parentNode: this.element });
-        
+
         this.messagePart.messageShow.getElement().addEventListener("wheel", this.changeReadedStatus);
         this.messagePart.messageShow.getElement().addEventListener("click", this.changeReadedStatus);
         this.messagePart.sendButton.getElement().addEventListener("click", this.sendMessage);
@@ -56,7 +59,7 @@ export class Chat extends BaseComponent {
             }
         });
 
-        this.messagePart.closeEditButton.getElement().addEventListener('click', this.endEditHandler)
+        this.messagePart.closeEditButton.getElement().addEventListener("click", this.endEditHandler);
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
@@ -87,7 +90,7 @@ export class Chat extends BaseComponent {
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
-            if (message.type === "MSG_SEND" && message.id === null) {
+            if (message.type === "MSG_SEND" && message.id === null && this.recipient) {
                 this.messages.forEach((element) => element.destroy());
                 this.messages = [];
                 this.getHistoryMessage();
@@ -109,13 +112,13 @@ export class Chat extends BaseComponent {
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_DELETE") {
-                console.log("refetch");
                 this.getHistoryMessage();
             }
         });
     }
 
     clickUserItem = (login: string, isLogined: boolean) => () => {
+        this.recipient = login;
         this.messagePart.setUser(login, isLogined);
 
         this.messagePart.messageInput.removeAttribute({ name: "disabled" });
@@ -124,6 +127,7 @@ export class Chat extends BaseComponent {
                 login: login,
             },
         };
+        if (!payload.user.login) return;
         this.requestId = socketSend("MSG_FROM_USER", payload);
     };
 
@@ -150,7 +154,7 @@ export class Chat extends BaseComponent {
               }
             : {
                   message: {
-                      to: this.messagePart.messageHeader.getTextContent(),
+                      to: this.recipient,
                       text: (this.messagePart.messageInput.getElement() as HTMLInputElement).value,
                   },
               };
@@ -166,9 +170,10 @@ export class Chat extends BaseComponent {
     getHistoryMessage = () => {
         const payload = {
             user: {
-                login: this.messagePart.messageHeader.getTextContent(),
+                login: this.recipient,
             },
         };
+        if (!payload.user.login) return;
         this.requestId = socketSend("MSG_FROM_USER", payload);
     };
 

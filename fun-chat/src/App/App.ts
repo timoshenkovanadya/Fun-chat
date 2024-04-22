@@ -33,10 +33,9 @@ export class App {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
                 if (!this.login) return;
-                this.sessionStorage.submit(
-                    (this.login.loginInput.getElement() as HTMLInputElement).value,
-                    (this.login.passwordInput.getElement() as HTMLInputElement).value
-                );
+                if (!sessionStorage.getItem("login") || !sessionStorage.getItem("password")) {
+                    this.sessionStorage.submit(this.login?.login, this.login?.password);
+                }
                 this.renderMain();
             }
             if (message.type === "USER_LOGOUT") {
