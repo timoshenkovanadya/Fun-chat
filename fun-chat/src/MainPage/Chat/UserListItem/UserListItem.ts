@@ -42,7 +42,9 @@ export class UserListItem extends BaseComponent {
                         respMessages
                             .filter((msg) => msg.from === login)
                             .reduce((acc, cur) => (cur.status.isReaded ? acc : acc + 1), 0) || 0;
-                    this.userListItemNumber.setTextContent(countUnread.toString());
+                            if (countUnread === 0) { this.userListItemNumber.setTextContent('')};
+                            if (countUnread > 0) {
+                    this.userListItemNumber.setTextContent(countUnread.toString())};
                 }
             }
         });
