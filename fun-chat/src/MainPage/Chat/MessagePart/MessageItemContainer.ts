@@ -1,4 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent";
+import { socketSend } from "../../../socket/socket";
 import { MsgType } from "../chat.types";
 
 type PropsType = Pick<BaseComponentProps, "parentNode"> & MsgType & { login: string };
@@ -12,8 +13,10 @@ export class MessageItemContainer extends BaseComponent {
 
     public messageItemFooter: BaseComponent;
 
+    public deleteButton: BaseComponent | null;
+
     constructor(props: PropsType) {
-        const { parentNode, login, from, to, text, datetime, status } = props;
+        const { parentNode, login, from, to, text, datetime, status, id } = props;
         super({ tagName: "div", classNames: "message-item-container", parentNode });
 
         const isIncome = login === to;
@@ -30,7 +33,7 @@ export class MessageItemContainer extends BaseComponent {
         this.messageItemHeader = new BaseComponent({
             tagName: "div",
             classNames: "message-item-header",
-            textContent: `${isIncome ? from : 'you'}     ${new Date(datetime).toUTCString()}`,
+            textContent: `${isIncome ? from : "you"}     ${new Date(datetime).toUTCString()}`,
             parentNode: this.messageItem.getElement(),
         });
 
@@ -44,10 +47,24 @@ export class MessageItemContainer extends BaseComponent {
         this.messageItemFooter = new BaseComponent({
             tagName: "div",
             classNames: "message-item-footer",
-            textContent: isIncome ? "" : (readed ? "read" : (delivered ? "Delivered" : (edited ? "edited": "Sended"))),
+            textContent: isIncome ? "" : readed ? "read" : delivered ? "Delivered" : edited ? "edited" : "Sended",
             parentNode: this.messageItem.getElement(),
         });
+        this.deleteButton = isIncome
+            ? null
+            : new BaseComponent({
+                  tagName: "button",
+                  classNames: "message-item-delete",
+                  textContent: "DEL",
+                  parentNode: this.messageItem.getElement(),
+              });
+
+        if (this.deleteButton) {
+            this.deleteButton.getElement().addEventListener("click", this.deleteHandler(id));
+        }
     }
+
+    deleteHandler = (id: string) => () => {
+        socketSend("MSG_DELETE", { message: { id } });
+    };
 }
-
-

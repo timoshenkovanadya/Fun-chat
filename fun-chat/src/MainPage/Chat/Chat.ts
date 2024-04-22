@@ -38,8 +38,8 @@ export class Chat extends BaseComponent {
             clickHandler: this.clickUserItem,
         });
         this.messagePart = new MessagePart({ tagName: "div", classNames: "message-part", parentNode: this.element });
-        this.messagePart.messageShow.getElement().addEventListener('wheel', this.changeReadedStatus);
-        this.messagePart.messageShow.getElement().addEventListener('click', this.changeReadedStatus);
+        this.messagePart.messageShow.getElement().addEventListener("wheel", this.changeReadedStatus);
+        this.messagePart.messageShow.getElement().addEventListener("click", this.changeReadedStatus);
         this.messagePart.sendButton.getElement().addEventListener("click", this.sendMessage);
         this.messagePart.sendButton.getElement().addEventListener("click", this.getHistoryMessage);
         this.messagePart.messageInput.getElement().addEventListener("keydown", this.keyEnterHandlerSend);
@@ -52,29 +52,30 @@ export class Chat extends BaseComponent {
             }
         });
 
-        
-
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_FROM_USER" && message.id === this.requestId) {
-                if(message.payload.messages.length === 0) {
-                    this.messagePart.messageShow.setTextContent('start your messaging')
+                if (message.payload.messages.length === 0) {
+                    this.messagePart.messageShow.setTextContent("start your messaging");
                 }
-                if(message.payload.messages.length !== 0) { 
-                this.messagePart.messageShow.setTextContent('')        
-                this.incomeIds = message.payload.messages.filter((element: MsgType) => element.to === this.login && !element.status.isReaded)
-                .map((element: MsgType) => element.id);
-                
-                message.payload.messages.forEach((msg: MsgType) => {
-                    const msgContainer = new MessageItemContainer({
-                        parentNode: this.messagePart.messageShow.getElement(),
-                        login: this.login,
-                        ...msg,
+                if (message.payload.messages.length !== 0) {
+                    this.messagePart.messageShow.setTextContent("");
+                    this.incomeIds = message.payload.messages
+                        .filter((element: MsgType) => element.to === this.login && !element.status.isReaded)
+                        .map((element: MsgType) => element.id);
+
+                    message.payload.messages.forEach((msg: MsgType) => {
+                        const msgContainer = new MessageItemContainer({
+                            parentNode: this.messagePart.messageShow.getElement(),
+                            login: this.login,
+                            ...msg,
+                        });
+                        this.messages.push(msgContainer);
                     });
-                    this.messages.push(msgContainer);
-                });
-                this.messagePart.messageShow.getElement().scrollTop = this.messagePart.messageShow.getElement().scrollHeight;
-            } }
+                    this.messagePart.messageShow.getElement().scrollTop =
+                        this.messagePart.messageShow.getElement().scrollHeight;
+                }
+            }
         });
 
         socket.addEventListener("message", (event) => {
@@ -94,6 +95,14 @@ export class Chat extends BaseComponent {
                 this.getHistoryMessage();
             }
         });
+
+        socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "MSG_DELETE") {
+                console.log('refetch')
+                this.getHistoryMessage();
+            }
+        });
     }
 
     clickUserItem = (login: string, isLogined: boolean) => () => {
@@ -106,7 +115,6 @@ export class Chat extends BaseComponent {
             },
         };
         this.requestId = socketSend("MSG_FROM_USER", payload);
-        
     };
 
     sendMessage = () => {
@@ -122,7 +130,6 @@ export class Chat extends BaseComponent {
         this.messages = [];
         this.changeReadedStatus();
         this.messagePart.sendButton.setAttribute({ name: "disabled", value: "true" });
-        
     };
 
     getHistoryMessage = () => {
@@ -143,19 +150,16 @@ export class Chat extends BaseComponent {
         }
     };
 
-    changeReadedStatusRequest = (id:string) => {
+    changeReadedStatusRequest = (id: string) => {
         const payload = {
             message: {
                 id: id,
             },
         };
         socketSend("MSG_READ", payload);
-        
-        
     };
 
     changeReadedStatus = () => {
-        this.incomeIds.forEach(id => this.changeReadedStatusRequest(id))
-         
-    }
+        this.incomeIds.forEach((id) => this.changeReadedStatusRequest(id));
+    };
 }
