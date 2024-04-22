@@ -107,23 +107,59 @@
 .message-item-container {
     width: 100%;
 }
+.outcome-message > .message-item-header {
+    font-size: 14px;
+    background-color:aliceblue;
+    width: 50%;
+    text-align: end;
+}
+.outcome-message >.message-item-text {
+    background-color:aliceblue;
+    width: 50%;
+    text-align: end;
+}
+.outcome-message >.message-item-footer {
+    background-color:aliceblue;
+    width: 50%;
+    text-align: end;
+}
 .income-message {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: aquamarine;
+    height: 55px;
+    /* background-color:aliceblue; */
     display: flex;
     align-items: flex-start;
+    
 }
 
 .outcome-message {
     display: flex;
     flex-direction: column;
-    background-color: aquamarine;
+    /* background-color:aliceblue; */
     display: flex;
     align-items: flex-end;
+    width: 100%;
+    height: 55px;
 }
-
+.income-message > .message-item-header {
+    font-size: 14px;
+    background-color:aliceblue;
+    width: 50%;
+    text-align: start;
+}
+.income-message >.message-item-text {
+    background-color:aliceblue;
+    width: 50%;
+    text-align: start;
+}
+.income-message >.message-item-footer {
+    background-color:aliceblue;
+    width: 50%;
+    text-align: start;
+    height: 17px;
+}
 .message-send {
     align-items: center;
     border-top: 1px solid;
