@@ -37,6 +37,15 @@ export class Chat extends BaseComponent {
         this.messagePart = new MessagePart({ tagName: "div", classNames: "message-part", parentNode: this.element });
         this.messagePart.sendButton.getElement().addEventListener("click", this.sendMessage);
         this.messagePart.sendButton.getElement().addEventListener("click", this.getHistoryMessage);
+        this.messagePart.messageInput.getElement().addEventListener("keydown", this.keyEnterHandlerSend);
+        this.messagePart.messageInput.getElement().addEventListener("input", () => {
+            if ((this.messagePart.messageInput.getElement() as HTMLInputElement).value.length > 0) {
+                this.messagePart.sendButton.removeAttribute({ name: "disabled" });
+            }
+            if ((this.messagePart.messageInput.getElement() as HTMLInputElement).value.length === 0) {
+                this.messagePart.sendButton.setAttribute({ name: "disabled", value: "true" });
+            }
+        });
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
@@ -64,7 +73,8 @@ export class Chat extends BaseComponent {
 
     clickUserItem = (login: string, isLogined: boolean) => () => {
         this.messagePart.setUser(login, isLogined);
-        this.messagePart.sendButton.removeAttribute({ name: "disabled" });
+
+        this.messagePart.messageInput.removeAttribute({ name: "disabled" });
         const payload = {
             user: {
                 login: login,
@@ -96,4 +106,11 @@ export class Chat extends BaseComponent {
     };
 
     renderMessages = () => {};
+
+    keyEnterHandlerSend = (e: KeyboardEvent) => {
+        if (e.key === "Enter") {
+            this.sendMessage();
+            this.getHistoryMessage();
+        }
+    };
 }

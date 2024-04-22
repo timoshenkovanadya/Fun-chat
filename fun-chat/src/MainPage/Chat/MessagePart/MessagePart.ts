@@ -44,6 +44,7 @@ export class MessagePart extends BaseComponent {
             parentNode: this.messageSend.getElement(),
         });
         this.messageInput.setAttribute({ name: "placeholder", value: "Message..." });
+        this.messageInput.setAttribute({ name: "disabled", value: "true" });
 
         this.sendButton = new BaseComponent({
             tagName: "button",
