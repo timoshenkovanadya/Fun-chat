@@ -44,7 +44,7 @@ export class MessageItemContainer extends BaseComponent {
         this.messageItemFooter = new BaseComponent({
             tagName: "div",
             classNames: "message-item-footer",
-            textContent: isIncome ? "" : (delivered ? "Delivered" : (readed ? "read" : (edited ? "edited": "Sended"))),
+            textContent: isIncome ? "" : (readed ? "read" : (delivered ? "Delivered" : (edited ? "edited": "Sended"))),
             parentNode: this.messageItem.getElement(),
         });
     }

@@ -20,6 +20,9 @@
     border-color: #140114;
     border-radius: 5px;
 }
+.header-button:hover {
+    cursor: pointer;
+}
 
 .chat-container {
     display:flex;
@@ -95,7 +98,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    overflow: auto;
     padding: 1%;
     width: 100%;
     gap: 20px;
@@ -139,11 +143,18 @@
     padding: 0 5%;
     width: 70%;
 }
+.message-input:hover {
+    cursor:text;
+}
+
 .send-button {
     height: 32px;
     margin: 1%;
     max-width: 200px;
     width: 50%;
+}
+.send-button:hover {
+    cursor: pointer;
 }
 .footer-container {
     display:flex;
