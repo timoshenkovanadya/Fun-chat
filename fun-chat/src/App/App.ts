@@ -1,6 +1,7 @@
 import { Info } from "../Info/Info";
 import { Login } from "../Login/LoginPage";
 import { MainPage } from "../MainPage/MainPage";
+import { SessionStorage } from "../sessionStorage/sessionStorage";
 import { socket, socketSend } from "../socket/socket";
 
 export class App {
@@ -14,6 +15,8 @@ export class App {
 
     public mainPage: MainPage | null;
 
+    public sessionStorage: SessionStorage;
+
     constructor(parent: HTMLElement) {
         this.appContainer = document.createElement("div");
         this.appContainer.className = "app-container";
@@ -22,11 +25,18 @@ export class App {
         this.login = null;
         this.info = null;
 
+        this.sessionStorage = new SessionStorage();
+
         this.init();
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
+                if (!this.login) return;
+                this.sessionStorage.submit(
+                    (this.login.loginInput.getElement() as HTMLInputElement).value,
+                    (this.login.passwordInput.getElement() as HTMLInputElement).value
+                );
                 this.renderMain();
             }
             if (message.type === "USER_LOGOUT") {

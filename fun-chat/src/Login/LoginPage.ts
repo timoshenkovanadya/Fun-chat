@@ -160,10 +160,10 @@ export class Login extends BaseComponent {
             },
         };
         socketSend("USER_LOGIN", payload);
-        this.sessionStorage.submit(
-            (this.loginInput.getElement() as HTMLInputElement).value,
-            (this.passwordInput.getElement() as HTMLInputElement).value
-        );
+        // this.sessionStorage.submit(
+        //     (this.loginInput.getElement() as HTMLInputElement).value,
+        //     (this.passwordInput.getElement() as HTMLInputElement).value
+        // );
     };
 
     keyEnterHandler = (e: KeyboardEvent) => {
