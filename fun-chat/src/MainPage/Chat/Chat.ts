@@ -39,6 +39,7 @@ export class Chat extends BaseComponent {
         });
         this.messagePart = new MessagePart({ tagName: "div", classNames: "message-part", parentNode: this.element });
         this.messagePart.messageShow.getElement().addEventListener('wheel', this.changeReadedStatus);
+        this.messagePart.messageShow.getElement().addEventListener('click', this.changeReadedStatus);
         this.messagePart.sendButton.getElement().addEventListener("click", this.sendMessage);
         this.messagePart.sendButton.getElement().addEventListener("click", this.getHistoryMessage);
         this.messagePart.messageInput.getElement().addEventListener("keydown", this.keyEnterHandlerSend);
@@ -119,6 +120,9 @@ export class Chat extends BaseComponent {
         (this.messagePart.messageInput.getElement() as HTMLInputElement).value = "";
         this.messages.forEach((element) => element.destroy());
         this.messages = [];
+        this.changeReadedStatus();
+        this.messagePart.sendButton.setAttribute({ name: "disabled", value: "true" });
+        
     };
 
     getHistoryMessage = () => {
