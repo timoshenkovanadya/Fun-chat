@@ -2,7 +2,7 @@ import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseCo
 import { socketSend } from "../../../socket/socket";
 import { MsgType } from "../chat.types";
 
-type PropsType = Pick<BaseComponentProps, "parentNode"> & MsgType & { login: string };
+type PropsType = Pick<BaseComponentProps, "parentNode"> & MsgType & { login: string; startEditHandler: () => void };
 
 export class MessageItemContainer extends BaseComponent {
     public messageItem: BaseComponent;
@@ -15,8 +15,11 @@ export class MessageItemContainer extends BaseComponent {
 
     public deleteButton: BaseComponent | null;
 
+    public updButton: BaseComponent | null;
+
     constructor(props: PropsType) {
-        const { parentNode, login, from, to, text, datetime, status, id } = props;
+        const { startEditHandler, parentNode, ...msg } = props;
+        const { login, from, to, text, datetime, status, id } = msg;
         super({ tagName: "div", classNames: "message-item-container", parentNode });
 
         const isIncome = login === to;
@@ -47,7 +50,7 @@ export class MessageItemContainer extends BaseComponent {
         this.messageItemFooter = new BaseComponent({
             tagName: "div",
             classNames: "message-item-footer",
-            textContent: isIncome ? "" : readed ? "read" : delivered ? "Delivered" : edited ? "edited" : "Sended",
+            textContent: isIncome ? "" : readed ? "read" : edited ? "edited" :  delivered ? "delivered" : "sended",
             parentNode: this.messageItem.getElement(),
         });
         this.deleteButton = isIncome
@@ -56,11 +59,22 @@ export class MessageItemContainer extends BaseComponent {
                   tagName: "button",
                   classNames: "message-item-delete",
                   textContent: "DEL",
-                  parentNode: this.messageItem.getElement(),
+                  parentNode: this.messageItemFooter.getElement(),
+              });
+        this.updButton = isIncome
+            ? null
+            : new BaseComponent({
+                  tagName: "button",
+                  classNames: "message-item-upd",
+                  textContent: "EDIT",
+                  parentNode: this.messageItemFooter.getElement(),
               });
 
         if (this.deleteButton) {
             this.deleteButton.getElement().addEventListener("click", this.deleteHandler(id));
+        }
+        if (this.updButton) {
+            this.updButton.getElement().addEventListener("click", startEditHandler);
         }
     }
 

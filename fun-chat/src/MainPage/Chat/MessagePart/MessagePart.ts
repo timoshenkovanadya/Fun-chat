@@ -13,6 +13,8 @@ export class MessagePart extends BaseComponent {
 
     public sendButton: BaseComponent;
 
+    public closeEditButton: BaseComponent;
+
     public login: string;
 
     constructor(props: BaseComponentProps) {
@@ -46,6 +48,13 @@ export class MessagePart extends BaseComponent {
         this.messageInput.setAttribute({ name: "placeholder", value: "Message..." });
         this.messageInput.setAttribute({ name: "disabled", value: "true" });
 
+        this.closeEditButton = new BaseComponent({
+            tagName: "button",
+            classNames: ["edit-button", 'invisible'],
+            textContent: "X",
+            parentNode: this.messageSend.getElement(),
+        });
+        
         this.sendButton = new BaseComponent({
             tagName: "button",
             classNames: "send-button",
@@ -58,14 +67,14 @@ export class MessagePart extends BaseComponent {
             const message = JSON.parse(event.data);
             if (message.type === "USER_ACTIVE") {
                 const activeUsers: UserType[] = message.payload.users;
-                if (activeUsers.some(user => user.login === this.messageHeader.getTextContent())) {
+                if (activeUsers.some((user) => user.login === this.messageHeader.getTextContent())) {
                     this.messageHeader.removeClassName("offline");
                     this.messageHeader.setClassName("online");
                 }
             }
             if (message.type === "USER_INACTIVE") {
                 const inactiveUsers: UserType[] = message.payload.users;
-                if (inactiveUsers.some(user => user.login === this.messageHeader.getTextContent())) {
+                if (inactiveUsers.some((user) => user.login === this.messageHeader.getTextContent())) {
                     this.messageHeader.removeClassName("online");
                     this.messageHeader.setClassName("offline");
                 }

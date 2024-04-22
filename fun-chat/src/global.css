@@ -1,11 +1,10 @@
-body{
+body {
     background-color: #d9c5d8;
-    color:#0d010c; 
-    
-    
-
+    color: #0d010c;
 }
 .app-container {
-    
-    
+}
+
+.invisible {
+    display: none;
 }

@@ -19,12 +19,15 @@ export class Chat extends BaseComponent {
 
     public incomeIds: string[];
 
+    public editMsgId: string;
+
     constructor(props: BaseComponentProps) {
         super(props);
         this.incomeIds = [];
         this.messages = [];
         this.login = "";
         this.requestId = "";
+        this.editMsgId = "";
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
@@ -38,6 +41,7 @@ export class Chat extends BaseComponent {
             clickHandler: this.clickUserItem,
         });
         this.messagePart = new MessagePart({ tagName: "div", classNames: "message-part", parentNode: this.element });
+        
         this.messagePart.messageShow.getElement().addEventListener("wheel", this.changeReadedStatus);
         this.messagePart.messageShow.getElement().addEventListener("click", this.changeReadedStatus);
         this.messagePart.sendButton.getElement().addEventListener("click", this.sendMessage);
@@ -51,6 +55,8 @@ export class Chat extends BaseComponent {
                 this.messagePart.sendButton.setAttribute({ name: "disabled", value: "true" });
             }
         });
+
+        this.messagePart.closeEditButton.getElement().addEventListener('click', this.endEditHandler)
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
@@ -68,6 +74,7 @@ export class Chat extends BaseComponent {
                         const msgContainer = new MessageItemContainer({
                             parentNode: this.messagePart.messageShow.getElement(),
                             login: this.login,
+                            startEditHandler: this.startEditHandler(msg),
                             ...msg,
                         });
                         this.messages.push(msgContainer);
@@ -89,17 +96,20 @@ export class Chat extends BaseComponent {
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
-            if (message.type === "MSG_READ") {
+            if (message.type === "MSG_READ" || message.type === "MSG_EDIT") {
                 this.messages.forEach((element) => element.destroy());
                 this.messages = [];
                 this.getHistoryMessage();
+            }
+            if (message.type === "MSG_EDIT") {
+                this.endEditHandler();
             }
         });
 
         socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_DELETE") {
-                console.log('refetch')
+                console.log("refetch");
                 this.getHistoryMessage();
             }
         });
@@ -117,14 +127,35 @@ export class Chat extends BaseComponent {
         this.requestId = socketSend("MSG_FROM_USER", payload);
     };
 
+    startEditHandler = (msg: MsgType) => () => {
+        (this.messagePart.messageInput.getElement() as HTMLInputElement).value = msg.text;
+        this.messagePart.closeEditButton.removeClassName("invisible");
+        this.editMsgId = msg.id;
+    };
+
+    endEditHandler = () => {
+        (this.messagePart.messageInput.getElement() as HTMLInputElement).value = "";
+        this.messagePart.closeEditButton.setClassName(["edit-button", "invisible"]);
+        this.editMsgId = "";
+        this.messagePart.sendButton.setAttribute({ name: "disabled", value: "true" });
+    };
+
     sendMessage = () => {
-        const payload = {
-            message: {
-                to: this.messagePart.messageHeader.getTextContent(),
-                text: (this.messagePart.messageInput.getElement() as HTMLInputElement).value,
-            },
-        };
-        socketSend("MSG_SEND", payload);
+        const payload = this.editMsgId
+            ? {
+                  message: {
+                      id: this.editMsgId,
+                      text: (this.messagePart.messageInput.getElement() as HTMLInputElement).value,
+                  },
+              }
+            : {
+                  message: {
+                      to: this.messagePart.messageHeader.getTextContent(),
+                      text: (this.messagePart.messageInput.getElement() as HTMLInputElement).value,
+                  },
+              };
+        const requestType = this.editMsgId ? "MSG_EDIT" : "MSG_SEND";
+        socketSend(requestType, payload);
         (this.messagePart.messageInput.getElement() as HTMLInputElement).value = "";
         this.messages.forEach((element) => element.destroy());
         this.messages = [];
