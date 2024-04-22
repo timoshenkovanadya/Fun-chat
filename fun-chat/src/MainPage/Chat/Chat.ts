@@ -51,6 +51,15 @@ export class Chat extends BaseComponent {
                 });
             }
         });
+
+        socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "MSG_SEND" && message.id === null) {
+                this.messages.forEach((element) => element.destroy());
+                this.messages = [];
+                this.getHistoryMessage();
+            }
+        });
     }
 
     clickUserItem = (login: string, isLogined: boolean) => () => {
