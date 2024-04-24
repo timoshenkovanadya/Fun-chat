@@ -1,6 +1,7 @@
 import { BaseComponent, BaseComponentProps } from "../../BaseComponent/BaseComponent";
 import { socket, socketSend } from "../../socket/socket";
 import "../MainPage.css";
+import { MessageDividerLine } from "./MessagePart/MessageDividerLine";
 import { MessageItemContainer } from "./MessagePart/MessageItemContainer";
 import { MessagePart } from "./MessagePart/MessagePart";
 import { UserList } from "./UserList/UserList";
@@ -73,7 +74,18 @@ export class Chat extends BaseComponent {
                         .filter((element: MsgType) => element.to === this.login && !element.status.isReaded)
                         .map((element: MsgType) => element.id);
 
-                    message.payload.messages.forEach((msg: MsgType) => {
+                    message.payload.messages.forEach((msg: MsgType, index: number) => {
+                        if (
+                            !msg.status.isReaded &&
+                            (index === 0 || message.payload.messages[index - 1].status.isReaded) &&
+                            msg.to === this.login
+                        ) {
+                            new MessageDividerLine({
+                                tagName: "div",
+                                classNames: "divider-container",
+                                parentNode: this.messagePart.messageShow.getElement(),
+                            });
+                        }
                         const msgContainer = new MessageItemContainer({
                             parentNode: this.messagePart.messageShow.getElement(),
                             login: this.login,
@@ -82,6 +94,7 @@ export class Chat extends BaseComponent {
                         });
                         this.messages.push(msgContainer);
                     });
+
                     this.messagePart.messageShow.getElement().scrollTop =
                         this.messagePart.messageShow.getElement().scrollHeight;
                 }

@@ -28,6 +28,7 @@ export class MainPage extends BaseComponent {
                 this.sendInitMessages();
                 
             }
+            
         });
     }
 

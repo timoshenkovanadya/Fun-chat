@@ -11,4 +11,5 @@ export type MsgType = {
         isReaded: boolean;
         isEdited: boolean;
     };
+    
 };

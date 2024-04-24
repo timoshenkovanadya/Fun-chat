@@ -10,8 +10,17 @@
     /* border: 1px solid #140114; */
     display:flex;
     justify-content: space-around;
+    align-items: center;
     flex-direction: row;
     font-size: 20px;    
+    border: 1px solid;
+    border-radius: 5px;
+    height: 10svh;
+   
+    max-height: 55px;
+    min-height: 45px;
+    padding: 0 2%;
+    width: 95%;
 }
 .header-button {
     background-color: #f2dcf2;
@@ -85,15 +94,18 @@
     width: 100%;
 }
 .online {
-    color: green;
+   color: green;
+   border-color: #140114;
+
 }
 .offline {
-   color: #a1050f;
+    color: #a1050f;
+    border-color: #140114;
 }
 .message-show {
     align-items: center;
     height: 80%;
-    position: relative;
+    
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -196,8 +208,17 @@
     display:flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    align-items: center;
     flex-direction: row;
-    font-size: 20px;    
+    font-size: 20px;   
+    border: 1px solid;
+    border-radius: 5px;
+    height: 10svh;
+   
+    max-height: 55px;
+    min-height: 45px;
+    padding: 0 2%;
+    width: 95%; 
 }
 .logo {
     width: 100px;
@@ -205,6 +226,16 @@
 }
 .footer-link {
     text-decoration: none;
+}
+.divider {
+    border-bottom: 1px solid #140114;
+    width: 100%;
+    text-align: center;
+}
+.divider-container {
+    position: relative;
+    width: 100%;
+    
 }
 
 @media (max-width: 768px) {
