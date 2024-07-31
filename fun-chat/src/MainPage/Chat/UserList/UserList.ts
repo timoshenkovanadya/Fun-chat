@@ -1,5 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent";
-import { socket } from "../../../socket/socket";
+import { socketConfig } from "../../../socket/socket";
 import { UserListItem } from "../UserListItem/UserListItem";
 import { UserType } from "../chat.types";
 
@@ -46,7 +46,7 @@ export class UserList extends BaseComponent {
             parentNode: this.element,
         });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_ACTIVE") {
                 this.activeUsersData = message.payload.users;

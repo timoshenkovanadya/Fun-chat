@@ -1,5 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent";
-import { socket, socketSend } from "../../../socket/socket";
+import { socketConfig, socketSend } from "../../../socket/socket";
 import { MsgType, UserType } from "../chat.types";
 
 import "./userListItem.styles.css";
@@ -31,7 +31,7 @@ export class UserListItem extends BaseComponent {
 
         const payload = { user: { login } };
         socketSend("MSG_FROM_USER", payload);
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_FROM_USER") {
                 const respMessages = message.payload.messages as MsgType[];
@@ -51,7 +51,7 @@ export class UserListItem extends BaseComponent {
             }
         });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_SEND" && message.id === null && payload.user.login) {
                 socketSend("MSG_FROM_USER", payload);

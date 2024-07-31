@@ -1,5 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../../BaseComponent/BaseComponent";
-import { socket, socketSend } from "../../socket/socket";
+import { socketConfig, socketSend } from "../../socket/socket";
 import "../MainPage.css";
 import { MessageDividerLine } from "./MessagePart/MessageDividerLine";
 import { MessageItemContainer } from "./MessagePart/MessageItemContainer";
@@ -32,7 +32,7 @@ export class Chat extends BaseComponent {
         this.recipient = "";
         this.requestId = "";
         this.editMsgId = "";
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
                 this.login = message.payload.user.login;
@@ -62,7 +62,7 @@ export class Chat extends BaseComponent {
 
         this.messagePart.closeEditButton.getElement().addEventListener("click", this.endEditHandler);
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_FROM_USER" && message.id === this.requestId) {
                 if (message.payload.messages.length === 0) {
@@ -101,7 +101,7 @@ export class Chat extends BaseComponent {
             }
         });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_SEND" && message.id === null && this.recipient) {
                 this.messages.forEach((element) => element.destroy());
@@ -110,7 +110,16 @@ export class Chat extends BaseComponent {
             }
         });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === "USER_EXTERNAL_LOGIN") {
+                this.messages.forEach((element) => element.destroy());
+                this.messages = [];
+                this.getHistoryMessage();
+            }
+        });
+
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_READ" || message.type === "MSG_EDIT") {
                 this.messages.forEach((element) => element.destroy());
@@ -122,7 +131,7 @@ export class Chat extends BaseComponent {
             }
         });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "MSG_DELETE") {
                 this.getHistoryMessage();

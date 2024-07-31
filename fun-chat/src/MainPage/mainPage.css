@@ -3,6 +3,7 @@
     display: flex;
     gap: 30px;
     flex-direction: column;
+  
 }
 
 
@@ -118,22 +119,28 @@
 }
 .message-item-container {
     width: 100%;
+    
 }
 .outcome-message > .message-item-header {
     font-size: 14px;
     background-color:aliceblue;
     width: 50%;
     text-align: end;
+    
+    
 }
 .outcome-message >.message-item-text {
     background-color:aliceblue;
     width: 50%;
+    font-size: 16px;
     text-align: end;
+   
 }
 .outcome-message >.message-item-footer {
     background-color:aliceblue;
     width: 50%;
     text-align: end;
+    
 }
 .income-message {
     display: flex;
@@ -154,6 +161,7 @@
     align-items: flex-end;
     width: 100%;
     height: 55px;
+    
 }
 .income-message > .message-item-header {
     font-size: 14px;
@@ -164,6 +172,7 @@
 .income-message >.message-item-text {
     background-color:aliceblue;
     width: 50%;
+    font-size: 16px;
     text-align: start;
 }
 .income-message >.message-item-footer {
@@ -172,6 +181,7 @@
     text-align: start;
     height: 17px;
 }
+
 .message-send {
     align-items: center;
     border-top: 1px solid;
@@ -215,7 +225,7 @@
     border-radius: 5px;
     height: 10svh;
    
-    max-height: 55px;
+    max-height: 70px;
     min-height: 45px;
     padding: 0 2%;
     width: 95%; 
@@ -248,4 +258,8 @@
         font-size: 12px;
     }
 
+}
+
+.message-item-btn {
+    margin-left: 2px;
 }

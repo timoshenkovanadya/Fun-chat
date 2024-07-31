@@ -1,8 +1,9 @@
+import { BaseComponent } from "../BaseComponent/BaseComponent";
 import { Info } from "../Info/Info";
 import { Login } from "../Login/LoginPage";
 import { MainPage } from "../MainPage/MainPage";
 import { SessionStorage } from "../sessionStorage/sessionStorage";
-import { socket, socketSend } from "../socket/socket";
+import { socketSend, socketConfig } from "../socket/socket";
 
 export class App {
     public appContainer: HTMLElement;
@@ -17,6 +18,8 @@ export class App {
 
     public sessionStorage: SessionStorage;
 
+    public modal: BaseComponent;
+
     constructor(parent: HTMLElement) {
         this.appContainer = document.createElement("div");
         this.appContainer.className = "app-container";
@@ -25,11 +28,22 @@ export class App {
         this.login = null;
         this.info = null;
 
+        this.modal = new BaseComponent({
+            tagName: "div",
+            classNames: "modal",
+            textContent: "Sorry, disconnection from the server, trying to reconnecting",
+            parentNode: this.appContainer,
+        });
+
         this.sessionStorage = new SessionStorage();
 
         this.init();
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("close", () => {
+            this.showModal();
+        });
+
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
                 if (!this.login) return;
@@ -71,8 +85,8 @@ export class App {
     start = () => {
         this.parent.append(this.appContainer);
         if (sessionStorage.getItem("login") !== null) {
-            if (socket) {
-                socket.addEventListener("open", () => {
+            if (socketConfig.socket) {
+                socketConfig.socket.addEventListener("open", () => {
                     const payload = {
                         user: {
                             login: sessionStorage.getItem("login"),
@@ -103,4 +117,11 @@ export class App {
         this.mainPage?.render(this.appContainer);
         this.mainPage?.sendInitMessages();
     };
+
+    showModal = () => {
+        this.modal?.render(this.appContainer);        
+        this.modal.setClassName("modal");
+        
+    };
+
 }

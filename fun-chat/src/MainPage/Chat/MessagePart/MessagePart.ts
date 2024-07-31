@@ -1,5 +1,5 @@
 import { BaseComponent, BaseComponentProps } from "../../../BaseComponent/BaseComponent";
-import { socket } from "../../../socket/socket";
+import { socketConfig } from "../../../socket/socket";
 import { UserType } from "../chat.types";
 
 export class MessagePart extends BaseComponent {
@@ -63,7 +63,7 @@ export class MessagePart extends BaseComponent {
         });
         this.sendButton.setAttribute({ name: "disabled", value: "true" });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_ACTIVE") {
                 const activeUsers: UserType[] = message.payload.users;

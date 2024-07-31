@@ -1,6 +1,6 @@
 import { BaseComponent, BaseComponentProps } from "../../BaseComponent/BaseComponent";
 import { SessionStorage } from "../../sessionStorage/sessionStorage";
-import { socket, socketSend } from "../../socket/socket";
+import { socketConfig, socketSend } from "../../socket/socket";
 import "../MainPage.css";
 
 export class Header extends BaseComponent {
@@ -13,8 +13,6 @@ export class Header extends BaseComponent {
     public logoutButton: BaseComponent;
 
     public sessionStorage: SessionStorage;
-
-    public socket: WebSocket;
 
     public login: string | null;
 
@@ -31,9 +29,8 @@ export class Header extends BaseComponent {
             textContent: `Username: ${this.login}`,
             parentNode: this.element,
         });
-        this.socket = socket;
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "USER_LOGIN") {
                 this.login = message.payload.user.login;

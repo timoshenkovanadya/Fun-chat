@@ -36,7 +36,7 @@ export class MessageItemContainer extends BaseComponent {
         this.messageItemHeader = new BaseComponent({
             tagName: "div",
             classNames: "message-item-header",
-            textContent: `${isIncome ? from : "you"}     ${new Date(datetime).toUTCString()}`,
+            textContent: `${isIncome ? from : "you"}     ${new Date(datetime).toLocaleTimeString()}`,
             parentNode: this.messageItem.getElement(),
         });
 
@@ -50,14 +50,14 @@ export class MessageItemContainer extends BaseComponent {
         this.messageItemFooter = new BaseComponent({
             tagName: "div",
             classNames: "message-item-footer",
-            textContent: isIncome ? "" : readed ? "read" : edited ? "edited" :  delivered ? "delivered" : "sended",
+            textContent: isIncome ? isIncome && edited ? "edited" : "" : readed && edited ? 'read, edited' : readed ? "read" : edited ? "edited" :  delivered ? "delivered" : "sended",
             parentNode: this.messageItem.getElement(),
         });
         this.deleteButton = isIncome
             ? null
             : new BaseComponent({
                   tagName: "button",
-                  classNames: "message-item-delete",
+                  classNames: "message-item-btn",
                   textContent: "DEL",
                   parentNode: this.messageItemFooter.getElement(),
               });
@@ -65,7 +65,7 @@ export class MessageItemContainer extends BaseComponent {
             ? null
             : new BaseComponent({
                   tagName: "button",
-                  classNames: "message-item-upd",
+                  classNames: "message-item-btn",
                   textContent: "EDIT",
                   parentNode: this.messageItemFooter.getElement(),
               });

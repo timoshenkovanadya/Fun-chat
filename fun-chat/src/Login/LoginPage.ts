@@ -1,7 +1,7 @@
 import { BaseComponent, BaseComponentProps } from "../BaseComponent/BaseComponent";
 
 import { SessionStorage } from "../sessionStorage/sessionStorage";
-import { socket, socketSend } from "../socket/socket";
+import { socketConfig, socketSend } from "../socket/socket";
 import "./LoginPage.css";
 
 export class Login extends BaseComponent {
@@ -54,7 +54,7 @@ export class Login extends BaseComponent {
             parentNode: this.loginContainer.getElement(),
         });
 
-        socket.addEventListener("message", (event) => {
+        socketConfig.socket.addEventListener("message", (event) => {
             const message = JSON.parse(event.data);
             if (message.type === "ERROR") {
                 this.errorMessage.setTextContent(message.payload.error);
@@ -115,7 +115,7 @@ export class Login extends BaseComponent {
             classNames: ["login-button", "disabled"],
             parentNode: this.loginContainer.getElement(),
         });
-        this.loginButton.setAttribute({ name: "disable", value: "true" });
+        this.loginButton.setAttribute({ name: "disabled", value: "true" });
 
         this.loginButton.getElement().addEventListener("click", this.enterHandler);
 
@@ -134,12 +134,13 @@ export class Login extends BaseComponent {
                 this.loginValidationText.setClassName("validation-message-active");
                 this.loginValidationText.setTextContent(`Should contain only letters of eng alphabet.`);
                 this.loginButton.setClassName("disabled");
+                this.loginButton.setAttribute({ name: "disabled", value: "true" });
             }
             if (/^[A-Za-z]+$/.test(value)) {
                 this.loginValidationText.removeClassName("validation-message-active");
             }
             if (/^[A-Za-z]+$/.test(value) && (this.passwordInput.getElement() as HTMLInputElement).value.length >= 4) {
-                this.loginButton.removeAttribute({ name: "disable" });
+                this.loginButton.removeAttribute({ name: "disabled" });
                 this.loginButton.removeClassName("disabled");
             }
         }
@@ -148,13 +149,14 @@ export class Login extends BaseComponent {
                 this.passwordValidationText.setClassName("validation-message-active");
                 this.passwordValidationText.setTextContent(`Should contain at least 4 characters.`);
                 this.loginButton.setClassName("disabled");
+                this.loginButton.setAttribute({ name: "disabled", value: "true" });
             }
 
             if (value.length >= 4) {
                 this.passwordValidationText.removeClassName("validation-message-active");
             }
             if (/^[A-Za-z]+$/.test((this.loginInput.getElement() as HTMLInputElement).value) && value.length >= 4) {
-                this.loginButton.removeAttribute({ name: "disable" });
+                this.loginButton.removeAttribute({ name: "disabled" });
                 this.loginButton.removeClassName("disabled");
             }
         }
